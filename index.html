@@ -140,6 +140,17 @@ body {
   color: var(--slate);
   font-weight: 500;
 }
+
+.danger-btn {
+  background: #1a2c4a;
+  border: 1px solid #1a2c4a;
+  color: white;
+}
+
+.danger-btn:hover {
+  background: #26406b;
+  border-color: #26406b;
+}
 .nav-select {
   background: white;
   border: 1px solid var(--border);
@@ -1081,6 +1092,12 @@ body.theme-dark .nav-btn:hover {
         <option value="muted">Muted</option>
       </select>
     </div>
+    <div class="field">
+      <label>Storage</label>
+      <button class="nav-btn danger-btn" type="button" onclick="clearTrackerStorage()">
+        Clear Saved Data
+      </button>
+    </div>
   </div>
 </div>
 
@@ -1340,6 +1357,26 @@ function setPreference(key, value) {
 
 function togglePreferences() {
   document.getElementById("prefs-panel").classList.toggle("hidden");
+}
+
+function clearTrackerStorage() {
+  const confirmClear = confirm("This will reset ALL your progress, marks, notes, and links. Continue?");
+  if (!confirmClear) return;
+
+  localStorage.removeItem(KEY);
+  localStorage.removeItem(PREFS_KEY);
+
+  localStorage.removeItem("uos_aero_jp_v2");
+  localStorage.removeItem("uos_aero_jp_v1");
+  localStorage.removeItem("uos_blackboard_links_v1");
+  localStorage.removeItem("uos_formula_links_v2");
+  localStorage.removeItem("uos_formula_links_v1");
+  localStorage.removeItem("uos_exams_v2");
+  localStorage.removeItem("uos_exams_v1");
+
+  alert("Tracker reset successfully.");
+
+  location.reload();
 }
 
 function save() {
