@@ -1,0 +1,2130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aerospace Engineering Year 1 Tracker</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@200;300;400;500;700&family=Shippori+Mincho:wght@400;500;600;700;800&family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink: #0e0c0a;
+  --paper: #f5f0e8;
+  --paper2: #ede8dc;
+  --paper3: #faf7f2;
+  --washi: #e8e0d0;
+  --sumi: #1a1612;
+  --vermillion: #c0392b;
+  --vermillion2: #e74c3c;
+  --gold: #b8860b;
+  --gold2: #d4a017;
+  --gold3: #f0c040;
+  --pine: #2d5a27;
+  --indigo: #1a2c4a;
+  --slate: #4a5568;
+  --muted: #7a6e5e;
+  --faint: #c8bfae;
+  --border: rgba(26,22,18,0.12);
+  --border2: rgba(26,22,18,0.22);
+  --shadow: 0 4px 24px rgba(14,12,10,0.14);
+  --shadow2: 0 2px 8px rgba(14,12,10,0.08);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  background-color: var(--paper);
+  background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%231a1612' fill-opacity='0.025'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  color: var(--ink);
+  font-family: "Cormorant Garamond", serif;
+  min-height: 100vh;
+  padding-top: 126px;
+}
+
+.sticky-exams {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  background: var(--sumi);
+  color: var(--paper);
+  border-bottom: 2px solid var(--vermillion);
+  height: 66px;
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  box-shadow: var(--shadow);
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.sticky-exams::-webkit-scrollbar { display: none; }
+.exam-ticker {
+  flex-shrink: 0;
+  padding: 0 28px;
+  min-width: 260px;
+  border-right: 1px solid rgba(255,255,255,0.1);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 100%;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.exam-ticker:hover { background: rgba(192,57,43,0.16); }
+.ticker-mod {
+  font-family: "DM Mono", monospace;
+  font-size: 10px;
+  color: var(--gold2);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  margin-bottom: 2px;
+}
+.ticker-time {
+  font-family: "DM Mono", monospace;
+  font-size: 18px;
+  color: #fff;
+  font-weight: 500;
+  letter-spacing: 0.03em;
+}
+.ticker-time.urgent { color: var(--vermillion2); }
+.ticker-date {
+  font-family: "DM Mono", monospace;
+  font-size: 9px;
+  color: rgba(245,240,232,0.48);
+  margin-top: 2px;
+}
+.add-exam-btn {
+  flex-shrink: 0;
+  min-height: 100%;
+  border: none;
+  background: none;
+  color: rgba(245,240,232,0.65);
+  font-family: "DM Mono", monospace;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 0 20px;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+.add-exam-btn:hover { color: var(--vermillion2); }
+
+.nav-bar {
+  position: fixed;
+  top: 66px;
+  left: 0;
+  right: 0;
+  z-index: 999;
+  background: var(--paper2);
+  border-bottom: 1px solid var(--border);
+  padding: 10px 32px;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+.year-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.nav-btn {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  padding: 6px 14px;
+  font-family: "DM Mono", monospace;
+  font-size: 10px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: 0.2s;
+  color: var(--slate);
+  font-weight: 500;
+}
+.nav-select {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  padding: 6px 12px;
+  font-family: "DM Mono", monospace;
+  font-size: 10px;
+  text-transform: uppercase;
+  color: var(--slate);
+  min-width: 120px;
+  outline: none;
+}
+.nav-select:focus { border-color: var(--vermillion); }
+.nav-btn:hover {
+  border-color: var(--vermillion);
+  color: var(--vermillion);
+  background: var(--paper3);
+  box-shadow: var(--shadow2);
+}
+
+.hero {
+  background: var(--sumi);
+  background-image:
+    radial-gradient(ellipse at 80% 0%, rgba(192,57,43,0.18) 0%, transparent 50%),
+    radial-gradient(ellipse at 20% 100%, rgba(26,44,74,0.35) 0%, transparent 50%),
+    url("https://i.redd.it/qizurgr6zha21.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  padding: 44px 32px 38px;
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: url("https://i.redd.it/qizurgr6zha21.png");
+  background-size: cover;
+  background-position: center 35%;
+  background-repeat: no-repeat;
+  filter: grayscale(100%) brightness(0.42) contrast(1.08);
+  z-index: 0;
+}
+.hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(to bottom, rgba(5,10,18,0.45), rgba(5,10,18,0.28)),
+    linear-gradient(to right, rgba(5,10,18,0.22), rgba(5,10,18,0.12));
+  z-index: 1;
+}
+.hero-accent {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 3px;
+  background: linear-gradient(45deg, var(--vermillion), var(--gold), transparent);
+  z-index: 3;
+}
+.hero-inner {
+  position: relative;
+  z-index: 2;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+.eyebrow {
+  font-family: "DM Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--gold2);
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.eyebrow::before {
+  content: "";
+  display: inline-block;
+  width: 28px;
+  height: 1px;
+  background: var(--vermillion);
+}
+h1 {
+  font-family: "Shippori Mincho", serif;
+  font-size: clamp(48px, 5vw, 56px);
+  font-weight: 800;
+  color: #f5f0e8;
+  line-height: 1.05;
+  letter-spacing: 0;
+  margin-bottom: 14px;
+}
+.h1-jp {
+  font-family: "Noto Serif JP", serif;
+  font-weight: 500;
+  font-size: clamp(13px, 2vw, 18px);
+  color: rgba(255,255,255,0.6);
+  margin-bottom: 28px;
+}
+.hero-grid {
+  display: grid;
+  grid-template-columns: 1.2fr 0.52fr 1fr;
+  gap: 14px;
+  margin-top: 10px;
+}
+.washi-card {
+  background: rgba(6, 12, 22, 0.5);
+  border: 1px solid rgba(255,255,255,0.16);
+  border-radius: 3px;
+  padding: 20px 22px;
+  position: relative;
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+}
+.card-label {
+  font-family: "DM Mono", monospace;
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(245,240,232,0.4);
+  margin-bottom: 14px;
+}
+.global-big {
+  font-family: "Shippori Mincho", serif;
+  font-size: 36px;
+  font-weight: 700;
+  color: #f5f0e8;
+  line-height: 1;
+  margin-bottom: 12px;
+}
+.global-big span {
+  font-size: 14px;
+  font-weight: 400;
+  color: rgba(245,240,232,0.45);
+  font-family: "DM Mono", monospace;
+}
+.progress-track {
+  height: 3px;
+  background: rgba(245,240,232,0.1);
+  border-radius: 99px;
+  overflow: hidden;
+  margin-bottom: 10px;
+}
+.progress-fill {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, var(--vermillion), var(--gold2));
+  border-radius: 99px;
+  transition: width 0.45s ease;
+}
+.meta-row {
+  display: flex;
+  justify-content: space-between;
+  font-family: "DM Mono", monospace;
+  font-size: 10px;
+  color: rgba(245,240,232,0.35);
+  flex-wrap: wrap;
+  gap: 4px;
+}
+.dash-launch {
+  min-height: 128px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  cursor: pointer;
+  padding: 18px 12px;
+}
+.dash-launch-icon {
+  font-family: "Shippori Mincho", serif;
+  font-size: 32px;
+  color: #f5f0e8;
+  line-height: 1;
+}
+.dash-launch-copy {
+  font-family: "Cormorant Garamond", serif;
+  font-size: 11px;
+  color: rgba(245,240,232,0.56);
+}
+.predictor-hero-number {
+  font-family: "Shippori Mincho", serif;
+  font-size: clamp(58px, 9vw, 92px);
+  line-height: 0.92;
+  color: #fff;
+  margin-bottom: 10px;
+  font-weight: 800;
+  text-shadow: 0 1px 0 rgba(0,0,0,0.18);
+}
+.predictor-hero-sub {
+  font-family: "DM Mono", monospace;
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(245,240,232,0.44);
+  margin-bottom: 8px;
+}
+.hero-summary {
+  font-family: "Cormorant Garamond", serif;
+  font-size: 17px;
+  color: rgba(245,240,232,0.82);
+  line-height: 1.4;
+}
+.hero-summary strong {
+  color: #fff;
+  font-weight: 600;
+}
+.content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 32px 20px 80px;
+}
+.module {
+  background: var(--paper3);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  margin-bottom: 12px;
+  overflow: hidden;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  position: relative;
+}
+.module:hover {
+  border-color: var(--border2);
+  box-shadow: var(--shadow2);
+}
+.module::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 2px;
+  height: 100%;
+}
+.module-header {
+  display: grid;
+  grid-template-columns: 20px minmax(240px, 1.5fr) minmax(220px, 1fr) minmax(280px, 1fr) auto auto 20px;
+  gap: 18px;
+  align-items: center;
+  padding: 18px 20px;
+  cursor: pointer;
+}
+.mod-stripe { width: 2px; height: 72px; border-radius: 99px; opacity: 0.85; }
+.mod-name {
+  font-family: "Shippori Mincho", serif;
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 2px;
+  line-height: 1.2;
+}
+.mod-kanji {
+  font-family: "Noto Serif JP", serif;
+  font-weight: 200;
+  font-size: 11px;
+  color: var(--muted);
+  letter-spacing: 0.14em;
+  margin-bottom: 6px;
+}
+.module-links {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.bb-link, .bb-edit-btn, .formula-btn, .formula-edit-btn, .mini-btn {
+  background: rgba(26,22,18,0.04);
+  border: 1px solid var(--border2);
+  border-radius: 2px;
+  color: var(--slate);
+  padding: 5px 9px;
+  font-family: "DM Mono", monospace;
+  font-size: 9px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  text-decoration: none;
+  transition: 0.2s;
+}
+.bb-link {
+  background: #111;
+  border-color: #111;
+  color: #fff;
+}
+.bb-link:hover {
+  background: #1d1d1d;
+  border-color: var(--vermillion);
+  color: #fff;
+}
+.bb-edit-btn:hover, .formula-btn:hover, .formula-edit-btn:hover, .mini-btn:hover {
+  border-color: var(--vermillion);
+  color: var(--vermillion);
+  background: var(--paper2);
+}
+.progress-section { min-width: 0; }
+.prog-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+.prog-done {
+  font-family: "Shippori Mincho", serif;
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--ink);
+}
+.prog-pct {
+  font-family: "DM Mono", monospace;
+  font-size: 11px;
+  color: var(--muted);
+  align-self: flex-end;
+}
+.prog-track {
+  height: 3px;
+  background: var(--washi);
+  border-radius: 99px;
+  overflow: hidden;
+  margin-bottom: 6px;
+}
+.prog-fill {
+  height: 100%;
+  width: 0%;
+  border-radius: 99px;
+  transition: width 0.45s ease;
+}
+.prog-of {
+  font-family: "DM Mono", monospace;
+  font-size: 10px;
+  color: var(--faint);
+  letter-spacing: 0.06em;
+}
+.inputs-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+.field label {
+  display: block;
+  font-family: "DM Mono", monospace;
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 5px;
+}
+.input {
+  width: 100%;
+  background: var(--paper2);
+  color: var(--ink);
+  border: 1px solid var(--border2);
+  border-radius: 2px;
+  padding: 8px 10px;
+  font-family: "DM Mono", monospace;
+  font-size: 13px;
+  outline: none;
+}
+.input:focus { border-color: var(--vermillion); }
+.input:disabled { opacity: 0.45; cursor: not-allowed; }
+.final-col { text-align: right; }
+.final-mark {
+  font-family: "Shippori Mincho", serif;
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1;
+  margin-bottom: 4px;
+}
+.final-cls {
+  font-family: "DM Mono", monospace;
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  padding: 3px 7px;
+  border-radius: 1px;
+  display: inline-block;
+}
+.cls-s-first { background: rgba(192,57,43,0.1); color: var(--vermillion); border: 1px solid rgba(192,57,43,0.3); }
+.cls-s-21 { background: rgba(184,134,11,0.1); color: var(--gold); border: 1px solid rgba(184,134,11,0.3); }
+.cls-s-22 { background: rgba(26,44,74,0.1); color: var(--indigo); border: 1px solid rgba(26,44,74,0.25); }
+.cls-s-third { background: rgba(74,85,104,0.1); color: var(--slate); border: 1px solid var(--border2); }
+.chevron { font-size: 10px; color: var(--faint); transition: transform 0.25s ease; }
+.chevron.open { transform: rotate(90deg); }
+.module-actions {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+.topic-list {
+  display: none;
+  border-top: 1px solid var(--border);
+  background: var(--paper2);
+}
+.topic-list.open { display: block; }
+.notes-area-wrap, .formula-links-wrap {
+  padding: 12px 20px 12px 42px;
+  border-bottom: 1px solid var(--border);
+}
+.notes-area {
+  width: 100%;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid var(--border);
+  padding: 6px 0;
+  font-family: "Cormorant Garamond", serif;
+  font-style: italic;
+  font-size: 14px;
+  color: var(--slate);
+  outline: none;
+  resize: vertical;
+  line-height: 1.6;
+}
+.notes-area::placeholder { color: var(--faint); }
+.formula-links-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+.topic-tools {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+.topic-tools-title {
+  font-family: "DM Mono", monospace;
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  color: var(--muted);
+  text-transform: uppercase;
+}
+.formula-links-title {
+  font-family: "DM Mono", monospace;
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  color: var(--muted);
+  text-transform: uppercase;
+}
+.formula-links-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.formula-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid var(--border2);
+  background: rgba(26,22,18,0.03);
+  padding: 5px 8px;
+  border-radius: 2px;
+}
+.formula-chip a {
+  color: var(--slate);
+  text-decoration: none;
+  font-family: "DM Mono", monospace;
+  font-size: 10px;
+}
+.formula-chip a:hover { color: var(--vermillion); }
+.formula-remove-btn {
+  border: none;
+  background: none;
+  color: var(--muted);
+  cursor: pointer;
+  font-family: "DM Mono", monospace;
+  font-size: 10px;
+}
+.formula-remove-btn:hover { color: var(--vermillion); }
+.formula-empty {
+  font-family: "Cormorant Garamond", serif;
+  font-size: 14px;
+  color: var(--muted);
+}
+.topic-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 9px 20px 9px 42px;
+  transition: background 0.15s;
+}
+.topic-row:hover { background: rgba(26,22,18,0.03); }
+.topic-main {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  flex: 1;
+  cursor: pointer;
+}
+.topic-row input[type=checkbox] {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 14px;
+  height: 14px;
+  border: 1px solid var(--border2);
+  border-radius: 1px;
+  background: transparent;
+  position: relative;
+  flex-shrink: 0;
+  cursor: pointer;
+  margin-top: 3px;
+}
+.topic-row input[type=checkbox]:checked {
+  background: var(--vermillion);
+  border-color: var(--vermillion);
+}
+.topic-row input[type=checkbox]:checked::after {
+  content: "";
+  position: absolute;
+  left: 3.5px;
+  top: 1px;
+  width: 4px;
+  height: 7px;
+  border: 1.5px solid #f5f0e8;
+  border-top: none;
+  border-left: none;
+  transform: rotate(45deg);
+}
+.topic-label {
+  font-family: "Cormorant Garamond", serif;
+  font-size: 15px;
+  color: var(--sumi);
+  line-height: 1.5;
+}
+.topic-label.done {
+  color: var(--faint);
+  text-decoration: line-through;
+  text-decoration-color: var(--faint);
+}
+.topic-delete-btn {
+  border: none;
+  background: none;
+  color: var(--muted);
+  font-family: "DM Mono", monospace;
+  font-size: 10px;
+  cursor: pointer;
+  padding: 2px 4px;
+  text-transform: uppercase;
+}
+.topic-delete-btn:hover { color: var(--vermillion); }
+
+.prefs-panel {
+  position: fixed;
+  top: 120px;
+  right: 18px;
+  z-index: 1200;
+  width: min(320px, calc(100vw - 24px));
+  background: var(--paper3);
+  border: 1px solid var(--border2);
+  border-radius: 6px;
+  box-shadow: var(--shadow);
+  padding: 16px;
+}
+.prefs-panel.hidden { display: none; }
+.prefs-title {
+  font-family: "DM Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 12px;
+}
+.prefs-grid {
+  display: grid;
+  gap: 12px;
+}
+.prefs-grid .field label {
+  margin-bottom: 6px;
+}
+.compact-marks-wrap {
+  display: none;
+}
+
+body.compact-ui .module-header {
+  grid-template-columns: 12px minmax(170px, 1.2fr) minmax(120px, 0.7fr) auto auto 18px;
+  gap: 10px;
+  padding: 12px 14px;
+}
+body.compact-ui .topic-row,
+body.compact-ui .notes-area-wrap,
+body.compact-ui .formula-links-wrap {
+  padding-top: 8px;
+  padding-bottom: 8px;
+}
+body.compact-ui .module {
+  margin-bottom: 8px;
+}
+body.compact-ui .mod-name {
+  font-size: 15px;
+}
+body.compact-ui .mod-kanji {
+  font-size: 10px;
+  margin-bottom: 4px;
+}
+body.compact-ui .module-header > .inputs-grid,
+body.compact-ui .module-header > .final-col,
+body.compact-ui .module-header > .module-actions {
+  display: none;
+}
+body.compact-ui .module-header .bb-edit-btn,
+body.compact-ui .module-header .formula-edit-btn {
+  display: none;
+}
+body.compact-ui .module-header .bb-link,
+body.compact-ui .module-header .formula-btn {
+  padding: 5px 7px;
+  min-width: 34px;
+  text-align: center;
+}
+body.compact-ui .compact-marks-wrap {
+  display: block;
+}
+body.compact-ui .prog-header {
+  justify-content: flex-end;
+  margin-bottom: 6px;
+}
+body.compact-ui .prog-done,
+body.compact-ui .prog-of {
+  display: none;
+}
+body.compact-ui .prog-pct {
+  font-size: 10px;
+}
+body.hero-muted .hero::before {
+  filter: grayscale(100%) brightness(0.28) contrast(1.02);
+}
+
+body.theme-quiet {
+  --vermillion: #8b7b68;
+  --vermillion2: #9b8c78;
+  --gold: #8d7c68;
+  --gold2: #a89784;
+  --gold3: #c9bbab;
+  --indigo: #8c8072;
+}
+body.theme-quiet .hero::before {
+  filter: grayscale(100%) sepia(18%) brightness(0.5) contrast(0.95);
+}
+body.theme-quiet .hero::after {
+  background:
+    linear-gradient(to bottom, rgba(20,18,16,0.38), rgba(20,18,16,0.2)),
+    linear-gradient(to right, rgba(20,18,16,0.16), rgba(20,18,16,0.08));
+}
+body.theme-quiet .module {
+  background: #f7f2ea;
+}
+body.theme-quiet .washi-card {
+  background: rgba(28, 24, 20, 0.46);
+}
+body.theme-quiet .prog-fill,
+body.theme-quiet .progress-fill,
+body.theme-quiet .module::before,
+body.theme-quiet .mod-stripe,
+body.theme-quiet .classification-badge {
+  filter: grayscale(100%) sepia(14%);
+}
+body.theme-quiet .c0,
+body.theme-quiet .c1,
+body.theme-quiet .c2,
+body.theme-quiet .c3,
+body.theme-quiet .c4,
+body.theme-quiet .c5,
+body.theme-quiet .c6 {
+  background: #988775;
+}
+body.theme-quiet .f0,
+body.theme-quiet .f1,
+body.theme-quiet .f2,
+body.theme-quiet .f3,
+body.theme-quiet .f4,
+body.theme-quiet .f5,
+body.theme-quiet .f6 {
+  background: linear-gradient(90deg, #a69480, #c1b19f);
+}
+body.theme-quiet .b0::before,
+body.theme-quiet .b1::before,
+body.theme-quiet .b2::before,
+body.theme-quiet .b3::before,
+body.theme-quiet .b4::before,
+body.theme-quiet .b5::before,
+body.theme-quiet .b6::before {
+  background: #a69480;
+}
+body.theme-quiet .fc0,
+body.theme-quiet .fc1,
+body.theme-quiet .fc2,
+body.theme-quiet .fc3,
+body.theme-quiet .fc4,
+body.theme-quiet .fc5,
+body.theme-quiet .fc6 {
+  color: #786857;
+}
+
+body.theme-dark {
+  --ink: #f4ede4;
+  --paper: #15120f;
+  --paper2: #1d1915;
+  --paper3: #211c17;
+  --washi: #31281f;
+  --sumi: #0f0d0b;
+  --slate: #d9cfc2;
+  --muted: #af9f8b;
+  --faint: #7e7163;
+  --border: rgba(255,255,255,0.1);
+  --border2: rgba(255,255,255,0.18);
+  --shadow: 0 8px 28px rgba(0,0,0,0.34);
+  --shadow2: 0 4px 10px rgba(0,0,0,0.24);
+}
+body.theme-dark .nav-btn,
+body.theme-dark .nav-select,
+body.theme-dark .input {
+  background: #241f1a;
+}
+body.theme-dark .dashboard-chart-wrap {
+  background: rgba(255,255,255,0.04);
+}
+body.theme-dark .topic-label {
+  color: #e8ddd0;
+}
+body.theme-dark .topic-row:hover {
+  background: rgba(255,255,255,0.04);
+}
+body.theme-dark .prog-done,
+body.theme-dark .final-mark,
+body.theme-dark .mod-name,
+body.theme-dark .dashboard-score,
+body.theme-dark .dashboard-subtitle,
+body.theme-dark .formula-chip a,
+body.theme-dark .formula-empty {
+  color: var(--ink);
+}
+body.theme-dark .prog-pct,
+body.theme-dark .prog-of,
+body.theme-dark .mod-kanji,
+body.theme-dark .field label,
+body.theme-dark .topic-tools-title,
+body.theme-dark .formula-links-title {
+  color: #bfae99;
+}
+body.theme-dark .bb-link {
+  background: #000;
+  border-color: #000;
+}
+body.theme-dark .bb-edit-btn:hover,
+body.theme-dark .formula-btn:hover,
+body.theme-dark .formula-edit-btn:hover,
+body.theme-dark .mini-btn:hover,
+body.theme-dark .nav-btn:hover {
+  background: #2b241e;
+}
+
+.dashboard-modal {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  background: rgba(14,12,10,0.62);
+  backdrop-filter: blur(8px);
+}
+.dashboard-modal.hidden { display: none; }
+.dashboard-content {
+  background: var(--paper);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 28px;
+  max-width: 980px;
+  width: min(96vw, 980px);
+  max-height: 88vh;
+  overflow-y: auto;
+  box-shadow: var(--shadow);
+  position: relative;
+}
+.dashboard-close {
+  position: absolute;
+  top: 12px;
+  right: 14px;
+  background: none;
+  border: none;
+  font-size: 26px;
+  color: var(--muted);
+  cursor: pointer;
+}
+.dashboard-close:hover { color: var(--vermillion); }
+.dashboard-title {
+  font-family: "Shippori Mincho", serif;
+  font-size: 20px;
+  margin-bottom: 22px;
+  color: var(--ink);
+}
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: 1.15fr 0.95fr;
+  gap: 16px;
+}
+.dashboard-card {
+  background: var(--paper2);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 18px;
+}
+.dashboard-card-title {
+  font-family: "DM Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+.dashboard-score {
+  font-family: "Shippori Mincho", serif;
+  font-size: 38px;
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1;
+  margin-bottom: 6px;
+}
+.dashboard-score.predictor-big {
+  font-size: clamp(58px, 7vw, 82px);
+  line-height: 0.92;
+}
+.dashboard-subtitle {
+  font-family: "Cormorant Garamond", serif;
+  font-size: 17px;
+  color: #5a4d40;
+  line-height: 1.4;
+}
+.dashboard-wide { grid-column: 1 / -1; }
+.dashboard-chart-wrap {
+  background: rgba(255,255,255,0.72);
+  border: 1px solid rgba(26,22,18,0.08);
+  border-radius: 6px;
+  padding: 14px;
+}
+#dashboard-chart {
+  display: block;
+  width: 100%;
+  height: 280px;
+}
+.classification-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 10px;
+  border-radius: 2px;
+  font-family: "DM Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  border: 1px solid;
+  margin-top: 10px;
+}
+.cls-first { background: rgba(255,25,0,0.12); border-color: var(--vermillion); color: var(--vermillion); }
+.cls-21 { background: rgba(212,160,23,0.14); border-color: var(--gold2); color: var(--gold); }
+.cls-22 { background: rgba(26,44,74,0.08); border-color: rgba(26,44,74,0.25); color: var(--indigo); }
+.cls-third { background: rgba(74,85,104,0.1); border-color: var(--border2); color: var(--slate); }
+.footer {
+  text-align: center;
+  padding: 40px 0;
+  font-family: "Noto Serif JP", serif;
+  font-weight: 200;
+  font-size: 12px;
+  letter-spacing: 0.2em;
+  color: var(--faint);
+}
+
+.c0 { background: #9c3a2e; } .f0 { background: linear-gradient(90deg, #c0392b, #e74c3c); }
+.c1 { background: #7a5c1e; } .f1 { background: linear-gradient(90deg, #b8860b, #d4a017); }
+.c2 { background: #1a4a6e; } .f2 { background: linear-gradient(90deg, #1a5c8c, #2980b9); }
+.c3 { background: #2d5a27; } .f3 { background: linear-gradient(90deg, #2d5a27, #4a8c42); }
+.c4 { background: #5a2d7a; } .f4 { background: linear-gradient(90deg, #6c3483, #8e44ad); }
+.c5 { background: #1a4a4a; } .f5 { background: linear-gradient(90deg, #0e6655, #1abc9c); }
+.c6 { background: #4a2d1a; } .f6 { background: linear-gradient(90deg, #784212, #a04000); }
+.b0::before { background: #c0392b; } .b1::before { background: #b8860b; } .b2::before { background: #1a5c8c; }
+.b3::before { background: #2d5a27; } .b4::before { background: #6c3483; } .b5::before { background: #0e6655; }
+.b6::before { background: #784212; }
+.fc0 { color: #c0392b; } .fc1 { color: #b8860b; } .fc2 { color: #1a5c8c; } .fc3 { color: #2d5a27; }
+.fc4 { color: #6c3483; } .fc5 { color: #0e6655; } .fc6 { color: #784212; }
+
+@media (max-width: 1100px) {
+  .hero-grid { grid-template-columns: 1fr 0.52fr 1fr; }
+  .module-header {
+    grid-template-columns: 16px 1fr;
+  }
+  .progress-section, .inputs-grid, .final-col, .module-actions, .chevron {
+    grid-column: 2;
+  }
+  .final-col { text-align: left; }
+}
+@media (max-width: 860px) {
+  body { padding-top: 132px; }
+  .hero-grid, .dashboard-grid { grid-template-columns: 1fr; }
+  .nav-bar { padding: 10px 16px; }
+}
+@media (max-width: 600px) {
+  .hero { padding: 36px 16px 34px; }
+  .content { padding: 20px 12px 60px; }
+  .module-header { padding: 14px; gap: 12px; }
+  .topic-row, .notes-area-wrap, .formula-links-wrap { padding-left: 28px; padding-right: 14px; }
+}
+</style>
+</head>
+<body>
+
+<div class="sticky-exams" id="live-exam-bar"></div>
+
+<div class="nav-bar">
+  <div class="year-controls">
+    <select class="nav-select" id="year-select" onchange="handleYearDropdown(this.value)"></select>
+  </div>
+  <button class="nav-btn" onclick="document.getElementById('modules-start').scrollIntoView({ behavior: 'smooth' })">Jump to Modules</button>
+  <button class="nav-btn" onclick="window.open('https://calendar.google.com/calendar/u/0/r','_blank','noopener')">Open Google Calendar</button>
+  <button class="nav-btn" onclick="addModuleToCurrentYear()">Add Module</button>
+  <button class="nav-btn" onclick="togglePreferences()">Preferences</button>
+  <button class="nav-btn" onclick="openDashboard()">Dashboard</button>
+</div>
+
+<div class="prefs-panel hidden" id="prefs-panel">
+  <div class="prefs-title">Preferences</div>
+  <div class="prefs-grid">
+    <div class="field">
+      <label for="pref-theme">Colour Scheme</label>
+      <select class="nav-select" id="pref-theme" onchange="setPreference('theme', this.value)">
+        <option value="light">Light</option>
+        <option value="quiet">Off-White</option>
+        <option value="dark">Dark</option>
+      </select>
+    </div>
+    <div class="field">
+      <label for="pref-density">Density</label>
+      <select class="nav-select" id="pref-density" onchange="setPreference('density', this.value)">
+        <option value="comfortable">Comfortable</option>
+        <option value="compact">Compact</option>
+      </select>
+    </div>
+    <div class="field">
+      <label for="pref-hero">Hero Image</label>
+      <select class="nav-select" id="pref-hero" onchange="setPreference('hero', this.value)">
+        <option value="full">Full</option>
+        <option value="muted">Muted</option>
+      </select>
+    </div>
+  </div>
+</div>
+
+<div class="hero">
+  <div class="hero-accent"></div>
+  <div class="hero-inner">
+    <div class="eyebrow" id="hero-eyebrow">University of Sheffield · Year 1 · 2025-26</div>
+    <h1>Aerospace Engineering</h1>
+    <div class="hero-grid">
+      <div class="washi-card">
+        <div class="card-label">Overall Progress</div>
+        <div class="global-big">
+          <span id="global-done">0</span><span> / </span><span id="global-total">0</span>
+          <span> topics</span>
+        </div>
+        <div class="progress-track"><div class="progress-fill" id="global-fill"></div></div>
+        <div class="meta-row">
+          <span id="global-pct-text">0.0% complete</span>
+          <span id="credits-text">0 / 120 credits</span>
+        </div>
+      </div>
+
+      <div class="washi-card dash-launch" onclick="openDashboard()">
+        <div>
+          <div class="dash-launch-icon">Dashboard</div>
+          <div class="dash-launch-copy">Dashboard analytics</div>
+        </div>
+      </div>
+
+      <div class="washi-card">
+        <div class="card-label">Year Prediction</div>
+        <div class="predictor-hero-number" id="hero-predictor">-</div>
+        <div class="predictor-hero-sub">Weighted year prediction</div>
+        <div class="hero-summary">Classification: <strong id="hero-class">Awaiting marks</strong></div>
+        <div id="classification-badge"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="dashboard-modal" class="dashboard-modal hidden">
+  <div class="dashboard-content">
+    <button class="dashboard-close" onclick="closeDashboard()">×</button>
+    <div class="dashboard-title">Dashboard</div>
+    <div class="dashboard-grid">
+      <div class="dashboard-card">
+        <div class="dashboard-card-title">Year Predictor</div>
+        <div class="dashboard-score predictor-big" id="dash-predictor">-</div>
+        <div class="dashboard-subtitle" id="dash-status">Enter marks below</div>
+        <div id="dash-badge"></div>
+      </div>
+      <div class="dashboard-card">
+        <div class="dashboard-card-title">Overall Stats</div>
+        <div class="dashboard-score" id="dash-completion">0%</div>
+        <div class="dashboard-subtitle" id="dash-credits">0 / 120 credits</div>
+      </div>
+      <div class="dashboard-card dashboard-wide">
+        <div class="dashboard-card-title">Module Progress</div>
+        <div class="dashboard-chart-wrap">
+          <canvas id="dashboard-chart"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="content" id="modules-start">
+  <div id="modules"></div>
+  <div class="footer" id="footer-label">UoS Y1 · Progress Tracker</div>
+</div>
+
+<script>
+const BASE_MODULES = [
+  { name:"Introduction to Aerospace Materials", kanji:"CMB121", short:"Materials", credits:20, cw:0, exam:100,
+    topics:["Intensive and Extensive Properties","Introduction to Mechanical Properties","Material Classes, Ashby Diagrams, HHI","Types of Bonding, Interatomic Forces","Packing and Temperature, Unit Cells, FCC/HCP/BCC","Essential Crystallography, Miller Indices","Tensile Tests, Elastic Properties, Bond Stiffness","Strength of Materials, Power Law & Work Hardening, Hardness","Theoretical Strength, Defects and Dislocations","Ductility and Brittleness, Charpy Impact Testing","Fracture Mechanics, Defects and Fatigue","Bending or Twisting, 3-point Bending, Second Moment of Area","Scalars, Vectors and Matrix Tensors","Directionality in Crystals","Rotation of Stress, Principal Stress, Mohr's Circle, Failure Criteria","Glass, Glass Properties","Technical and Non-Technical Ceramics, Porosity","Metals, Steel Properties, Hall-Petch Relationship","Types of Ferrous Materials, Fe-C Phase Diagram","Non-Ferrous Alloys (Al, Mg, Ni, Ti)","Polymer Chains","Thermoplastics, Thermosets, Elastomers","Composites, Fibre Reinforced, Mixture Rules","Wood, Particulate Composites, MMC, Concrete","Materials Selection, Ashby Diagrams","Conflicting Constraints, Min-Max, Penalty Functions","Life-Cycle Analysis, Embodied Energy","Recycling, Materials Selection, LCA"]},
+  { name:"Aerospace Engineering Design, Build and Test", kanji:"ELE101", short:"Design", credits:20, cw:60, exam:40,
+    topics:["Moving Aerodynamic Surfaces, Wing Shapes, Wing Sections","Air Speed, Bernoulli Equation, Lift Generation","Pressure Coefficient, Lift Coefficient, 3D effects","Boundary Layer, Reynolds Number, High Lift Devices","Boundary Layer Design, Stall, NACA Airfoils","Drag, Induced Drag","Compressibility and High Speed Flows","Forces & Moments on Aircraft, Longitudinal & Lateral Stability","Gliding","Range and Endurance","Take Off and Landing","Climbing Flight","V-n Diagram","The Space Environment, Spacecraft Systems, Orbit Classification","Spacecraft Propulsion and the Rocket Equation","Celestial Mechanics, Kepler's Laws and Orbital Elements","Orbit, Trajectory Design, Orbit Transfers"]},
+  { name:"Analysis and Modelling of Aerospace Systems", kanji:"ELE112", short:"Analysis", credits:15, cw:50, exam:50,
+    topics:["Analytical Solution of ODEs","Laplace Transform","System Responses and Transfer Functions","First-Order Systems","Second-Order Systems","Block Diagrams","Introduction to Feedback","Proportional Control","PID Control","PID Controller","Introduction to Frequency Response","Frequency Response: Performance and Stability Criteria"]},
+  { name:"Electrical Fundamentals", kanji:"ELE113", short:"Electrical", credits:15, cw:20, exam:80,
+    topics:["Basic Concepts","Network Analysis","Circuit Components","Transient Circuits","First Order AC Circuits","Second Order AC Circuits","Power Dissipation in AC Circuits","Magnetism and Electromagnetics","Motor and Machines","Semiconductors and P-N Junction","Diode Applications","Transistors","DC and AC Bias","Op-Amplifiers"]},
+  { name:"Engineering Statics and Dynamics", kanji:"MAC117", short:"Statics & Dyn.", credits:15, cw:0, exam:100,
+    topics:["Forces, Moments and Equilibrium","Connections, Supports and Reaction Forces","Truss Structures","Beams and Section Forces","Frames and Section Forces","Introduction to Cables","Introduction to Dynamics and Coordinate Systems","Normal and Tangential Coordinates","Polar Coordinates","Polar Coordinates, Relative Motion and Rigid Body Motion","Kinematics of Rigid Bodies, Instantaneous Centres","Kinematics of Rigid Bodies, Worked Examples","Introduction to Kinetics, Centre of Mass","Second Moment of Inertia, Theory and Examples","Moment Equations in Dynamics","Introduction to Work, Energy, Momentum, Impulse and Power"]},
+  { name:"Aerospace Aerodynamics and Thermodynamics", kanji:"MAC118", short:"Thermo.", credits:15, cw:30, exam:70,
+    topics:["Liquids and Gases","Types of Energy","The First Law","The Second Law","Steady Flow Devices","Heat Engine and Refrigeration Cycles","The Brayton Cycle"]},
+  { name:"Mathematics", kanji:"MPS123", short:"Mathematics", credits:20, cw:50, exam:50,
+    topics:["Functions","Differentiation","Integration","Complex Numbers","Vectors","Matrices","Differential Equations"]}
+];
+
+const KEY = "uos_aero_tracker_v4";
+const PREFS_KEY = "uos_aero_prefs_v1";
+const LEGACY_STATE_KEYS = ["uos_aero_jp_v2", "uos_aero_jp_v1"];
+const LEGACY_BLACKBOARD_KEYS = ["uos_blackboard_links_v1"];
+const LEGACY_FORMULA_KEYS = ["uos_formula_links_v2", "uos_formula_links_v1"];
+const LEGACY_EXAM_KEYS = ["uos_exams_v2", "uos_exams_v1"];
+
+const defaultState = {
+  years: {},
+  ui: { currentYearId: "year1" }
+};
+
+let MODULES = [];
+let TOTAL_CREDITS = 0;
+const preferences = Object.assign(
+  { theme: "light", density: "comfortable", hero: "full" },
+  loadJson(PREFS_KEY, {})
+);
+
+function deepClone(value) {
+  return JSON.parse(JSON.stringify(value));
+}
+
+function loadJson(key, fallback) {
+  try {
+    const raw = localStorage.getItem(key);
+    return raw ? JSON.parse(raw) : fallback;
+  } catch (error) {
+    return fallback;
+  }
+}
+
+function firstExisting(keys, fallback) {
+  for (const key of keys) {
+    const value = loadJson(key, null);
+    if (value !== null) return value;
+  }
+  return fallback;
+}
+
+function createYearStore(modules) {
+  return {
+    modules: deepClone(modules),
+    topics: {},
+    coursework: {},
+    exams: {},
+    notes: {},
+    blackboard: {},
+    formulas: {},
+    customExams: [],
+    archived: false
+  };
+}
+
+function migrateLegacyState() {
+  const migrated = deepClone(defaultState);
+  const legacy = firstExisting(LEGACY_STATE_KEYS, {});
+  const legacyBoard = firstExisting(LEGACY_BLACKBOARD_KEYS, {});
+  const legacyFormula = firstExisting(LEGACY_FORMULA_KEYS, {});
+  const legacyExams = firstExisting(LEGACY_EXAM_KEYS, []);
+  const yearId = "year1";
+  migrated.years[yearId] = {
+    id: yearId,
+    label: "Year 1",
+    store: createYearStore(BASE_MODULES)
+  };
+  const store = migrated.years[yearId].store;
+
+  BASE_MODULES.forEach((mod, mi) => {
+    mod.topics.forEach((_, ti) => {
+      const key = `t_${mi}_${ti}`;
+      if (legacy[key]) store.topics[key] = true;
+    });
+    const cwKey = `cw_${mi}`;
+    const exKey = `ex_${mi}`;
+    const notesKey = `notes_${mi}`;
+    if (legacy[cwKey] !== undefined) store.coursework[mi] = legacy[cwKey];
+    if (legacy[exKey] !== undefined) store.exams[mi] = legacy[exKey];
+    if (legacy[notesKey] !== undefined) store.notes[mi] = legacy[notesKey];
+    if (legacyBoard && legacyBoard[mi]) store.blackboard[mi] = legacyBoard[mi];
+    if (legacyFormula && legacyFormula[mi]) {
+      store.formulas[mi] = Array.isArray(legacyFormula[mi])
+        ? legacyFormula[mi]
+        : [{ name: mod.short + " Formula Sheet", url: legacyFormula[mi] }];
+    }
+  });
+
+  if (Array.isArray(legacyExams)) store.customExams = legacyExams;
+  return migrated;
+}
+
+let state = loadJson(KEY, null);
+if (!state) {
+  state = migrateLegacyState();
+  localStorage.setItem(KEY, JSON.stringify(state));
+}
+
+function ensureYearsState() {
+  if (state.years && Object.keys(state.years).length) {
+    if (!state.ui) state.ui = {};
+    if (!state.ui.currentYearId || !state.years[state.ui.currentYearId]) {
+      state.ui.currentYearId = Object.keys(state.years)[0];
+    }
+    return;
+  }
+
+  const legacyStore = {
+    modules: deepClone(BASE_MODULES),
+    topics: state.topics || {},
+    coursework: state.coursework || {},
+    exams: state.exams || {},
+    notes: state.notes || {},
+    blackboard: state.blackboard || {},
+    formulas: state.formulas || {},
+    customExams: state.customExams || [],
+    archived: false
+  };
+  state = {
+    years: {
+      year1: {
+        id: "year1",
+        label: "Year 1",
+        store: legacyStore
+      }
+    },
+    ui: { currentYearId: "year1" }
+  };
+  save();
+}
+
+ensureYearsState();
+
+function getCurrentYear() {
+  return state.years[state.ui.currentYearId];
+}
+
+function getStore() {
+  return getCurrentYear().store;
+}
+
+function refreshActiveYear() {
+  const currentYear = getCurrentYear();
+  MODULES = currentYear.store.modules;
+  TOTAL_CREDITS = MODULES.reduce((sum, mod) => sum + mod.credits, 0);
+}
+
+refreshActiveYear();
+
+function applyPreferences() {
+  document.body.classList.toggle("theme-dark", preferences.theme === "dark");
+  document.body.classList.toggle("theme-quiet", preferences.theme === "quiet");
+  document.body.classList.toggle("compact-ui", preferences.density === "compact");
+  document.body.classList.toggle("hero-muted", preferences.hero === "muted");
+  const themeSelect = document.getElementById("pref-theme");
+  const densitySelect = document.getElementById("pref-density");
+  const heroSelect = document.getElementById("pref-hero");
+  if (themeSelect) themeSelect.value = preferences.theme;
+  if (densitySelect) densitySelect.value = preferences.density;
+  if (heroSelect) heroSelect.value = preferences.hero;
+}
+
+function setPreference(key, value) {
+  preferences[key] = value;
+  localStorage.setItem(PREFS_KEY, JSON.stringify(preferences));
+  applyPreferences();
+  if (!document.getElementById("dashboard-modal").classList.contains("hidden")) renderDashboardChart();
+}
+
+function togglePreferences() {
+  document.getElementById("prefs-panel").classList.toggle("hidden");
+}
+
+function save() {
+  localStorage.setItem(KEY, JSON.stringify(state));
+}
+
+function parseMark(value) {
+  if (value === "" || value === null || value === undefined) return null;
+  const num = parseFloat(value);
+  if (Number.isNaN(num)) return null;
+  return Math.max(0, Math.min(100, num));
+}
+
+function topicKey(mi, ti) { return `t_${mi}_${ti}`; }
+function getModuleDone(mi) {
+  const store = getStore();
+  return MODULES[mi].topics.filter((_, ti) => !!store.topics[topicKey(mi, ti)]).length;
+}
+function getModulePct(mi) { return MODULES[mi].topics.length ? (getModuleDone(mi) / MODULES[mi].topics.length) * 100 : 0; }
+function getBlackboardLink(mi) {
+  const store = getStore();
+  return store.blackboard[mi] || "";
+}
+function getFormulaLinks(mi) {
+  const store = getStore();
+  return Array.isArray(store.formulas[mi]) ? store.formulas[mi] : [];
+}
+
+function getModuleFinal(mi) {
+  const mod = MODULES[mi];
+  const store = getStore();
+  const cw = parseMark(store.coursework[mi]);
+  const ex = parseMark(store.exams[mi]);
+  if (mod.cw === 0) return ex;
+  if (cw === null || ex === null) return null;
+  return (cw * mod.cw + ex * mod.exam) / 100;
+}
+
+function classify(mark) {
+  if (mark === null) return null;
+  if (mark >= 70) return { label: "1st", badge: "1st Class", cls: "cls-s-first", heroCls: "cls-first" };
+  if (mark >= 60) return { label: "2:1", badge: "2:1", cls: "cls-s-21", heroCls: "cls-21" };
+  if (mark >= 50) return { label: "2:2", badge: "2:2", cls: "cls-s-22", heroCls: "cls-22" };
+  if (mark >= 40) return { label: "3rd", badge: "3rd", cls: "cls-s-third", heroCls: "cls-third" };
+  return { label: "Fail", badge: "Fail", cls: "", heroCls: "" };
+}
+
+function getWeightedAvg() {
+  let weighted = 0;
+  let credits = 0;
+  MODULES.forEach((mod, mi) => {
+    const final = getModuleFinal(mi);
+    if (final !== null) {
+      weighted += final * mod.credits;
+      credits += mod.credits;
+    }
+  });
+  return credits ? weighted / credits : null;
+}
+
+function escapeHtml(text) {
+  return String(text)
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#39;");
+}
+
+function safeUrl(url) {
+  const trimmed = String(url || "").trim();
+  if (!trimmed) return "";
+  if (/^https?:\/\//i.test(trimmed)) return trimmed;
+  return "https://" + trimmed.replace(/^\/+/, "");
+}
+
+function setBlackboardLink(mi, event) {
+  if (event) event.stopPropagation();
+  const current = getBlackboardLink(mi);
+  const url = prompt("Enter Blackboard link for this module (leave blank to remove):", current || "");
+  if (url === null) return;
+  const clean = safeUrl(url);
+  const store = getStore();
+  if (url.trim()) store.blackboard[mi] = clean; else delete store.blackboard[mi];
+  save();
+  updateBlackboardButton(mi);
+}
+
+function openBlackboardLink(mi, event) {
+  if (event) event.stopPropagation();
+  const url = getBlackboardLink(mi);
+  if (url) window.open(url, "_blank", "noopener");
+  else setBlackboardLink(mi);
+}
+
+function updateBlackboardButton(mi) {
+  const btn = document.getElementById(`bb-link-${mi}`);
+  if (!btn) return;
+  const hasLink = !!getBlackboardLink(mi);
+  const compact = document.body.classList.contains("compact-ui");
+  if (compact) btn.textContent = hasLink ? "BB" : "Set";
+  else btn.textContent = hasLink ? "Launch Blackboard" : "Set Blackboard";
+}
+
+function setFormulaLink(mi, event) {
+  if (event) event.stopPropagation();
+  const name = prompt("Formula sheet name:", MODULES[mi].short + " Formula Sheet");
+  if (name === null || !name.trim()) return;
+  const url = prompt("Enter URL for formula sheet:");
+  if (url === null || !url.trim()) return;
+  const items = getFormulaLinks(mi).slice();
+  items.push({ name: name.trim(), url: safeUrl(url) });
+  getStore().formulas[mi] = items;
+  save();
+  updateFormulaButton(mi);
+}
+
+function deleteFormulaLink(mi, index, event) {
+  if (event) event.stopPropagation();
+  const items = getFormulaLinks(mi).slice();
+  if (!items[index]) return;
+  items.splice(index, 1);
+  const store = getStore();
+  if (items.length) store.formulas[mi] = items; else delete store.formulas[mi];
+  save();
+  updateFormulaButton(mi);
+}
+
+function openFormulaLink(mi, event) {
+  if (event) event.stopPropagation();
+  const items = getFormulaLinks(mi);
+  if (!items.length) return setFormulaLink(mi);
+  if (items.length === 1) {
+    window.open(items[0].url, "_blank", "noopener");
+    return;
+  }
+  const options = items.map((item, index) => `${index + 1}. ${item.name}`).join("\n");
+  const chosen = prompt(`Open which formula sheet?\n${options}`, "1");
+  if (chosen === null) return;
+  const idx = parseInt(chosen, 10) - 1;
+  if (items[idx]) window.open(items[idx].url, "_blank", "noopener");
+}
+
+function renderFormulaLinks(mi) {
+  const host = document.getElementById(`formula-links-${mi}`);
+  if (!host) return;
+  const items = getFormulaLinks(mi);
+  if (!items.length) {
+    host.innerHTML = '<div class="formula-empty">No formula sheets added yet.</div>';
+    return;
+  }
+  host.innerHTML = items.map((item, index) => `
+    <div class="formula-chip">
+      <a href="${escapeHtml(item.url)}" target="_blank" rel="noopener">${escapeHtml(item.name)}</a>
+      <button class="formula-remove-btn" type="button" onclick="deleteFormulaLink(${mi}, ${index}, event)" title="Delete formula sheet">x</button>
+    </div>
+  `).join("");
+}
+
+function updateFormulaButton(mi) {
+  const btn = document.getElementById(`formula-btn-${mi}`);
+  if (btn) {
+    const count = getFormulaLinks(mi).length;
+    const compact = document.body.classList.contains("compact-ui");
+    btn.textContent = compact ? "Fx" : (count ? `Docs (${count})` : "Docs");
+    btn.style.opacity = count ? "1" : "0.55";
+  }
+  renderFormulaLinks(mi);
+}
+
+function updateModule(mi) {
+  const done = getModuleDone(mi);
+  const pct = getModulePct(mi);
+  document.getElementById(`mdone-${mi}`).textContent = done;
+  document.getElementById(`mpct-${mi}`).textContent = pct.toFixed(1) + "% complete";
+  document.getElementById(`mfill-${mi}`).style.width = pct.toFixed(1) + "%";
+
+  const final = getModuleFinal(mi);
+  const finalEl = document.getElementById(`mfinal-${mi}`);
+  const clsEl = document.getElementById(`mcls-${mi}`);
+  finalEl.textContent = final === null ? "-" : final.toFixed(1) + "%";
+  if (final !== null) {
+    const cls = classify(final);
+    clsEl.className = "final-cls " + (cls.cls || "");
+    clsEl.textContent = cls.label;
+  } else {
+    clsEl.className = "final-cls";
+    clsEl.textContent = "";
+  }
+
+  const cwInput = document.getElementById(`cw-${mi}`);
+  if (cwInput) {
+    cwInput.disabled = MODULES[mi].cw === 0;
+    if (MODULES[mi].cw === 0) cwInput.placeholder = "N/A";
+  }
+}
+
+function updateGlobal() {
+  let total = 0;
+  let done = 0;
+  let weightedCredits = 0;
+  MODULES.forEach((mod, mi) => {
+    total += mod.topics.length;
+    done += getModuleDone(mi);
+    weightedCredits += mod.credits * (getModulePct(mi) / 100);
+  });
+  const pct = total ? (done / total) * 100 : 0;
+  document.getElementById("global-done").textContent = done;
+  document.getElementById("global-total").textContent = total;
+  document.getElementById("global-fill").style.width = pct.toFixed(1) + "%";
+  document.getElementById("global-pct-text").textContent = pct.toFixed(1) + "% complete";
+  document.getElementById("credits-text").textContent = weightedCredits.toFixed(1) + " / " + TOTAL_CREDITS + " credits";
+  updatePredictor();
+  updateDashboard();
+}
+
+function updatePredictor() {
+  const avg = getWeightedAvg();
+  const heroPredictor = document.getElementById("hero-predictor");
+  const heroClass = document.getElementById("hero-class");
+  const badgeHost = document.getElementById("classification-badge");
+  if (avg === null) {
+    heroPredictor.textContent = "-";
+    heroClass.textContent = "Awaiting marks";
+    badgeHost.innerHTML = "";
+    return;
+  }
+  const cls = classify(avg);
+  heroPredictor.textContent = avg.toFixed(1) + "%";
+  heroClass.textContent = cls.badge;
+  badgeHost.innerHTML = `<span class="classification-badge ${cls.heroCls}">${cls.badge}</span>`;
+}
+
+function updateDashboard() {
+  const avg = getWeightedAvg();
+  let total = 0;
+  let done = 0;
+  let weightedCredits = 0;
+  let creditsWithMarks = 0;
+  MODULES.forEach((mod, mi) => {
+    total += mod.topics.length;
+    done += getModuleDone(mi);
+    weightedCredits += mod.credits * (getModulePct(mi) / 100);
+    if (getModuleFinal(mi) !== null) creditsWithMarks += mod.credits;
+  });
+  document.getElementById("dash-completion").textContent = (total ? (done / total) * 100 : 0).toFixed(0) + "%";
+  document.getElementById("dash-credits").textContent = weightedCredits.toFixed(1) + " / " + TOTAL_CREDITS + " credits";
+
+  const predictor = document.getElementById("dash-predictor");
+  const status = document.getElementById("dash-status");
+  const badge = document.getElementById("dash-badge");
+  if (avg === null) {
+    predictor.textContent = "-";
+    status.textContent = "Enter module marks below";
+    badge.innerHTML = "";
+  } else {
+    const cls = classify(avg);
+    predictor.textContent = avg.toFixed(1) + "%";
+    status.textContent = `Full-year weighted average based on ${creditsWithMarks} / ${TOTAL_CREDITS} credits`;
+    badge.innerHTML = `<span class="classification-badge ${cls.heroCls}">${cls.badge}</span>`;
+  }
+  if (!document.getElementById("dashboard-modal").classList.contains("hidden")) renderDashboardChart();
+}
+
+function openDashboard() {
+  document.getElementById("dashboard-modal").classList.remove("hidden");
+  updateDashboard();
+  renderDashboardChart();
+}
+
+function closeDashboard() {
+  document.getElementById("dashboard-modal").classList.add("hidden");
+}
+
+document.getElementById("dashboard-modal").addEventListener("click", (event) => {
+  if (event.target.id === "dashboard-modal") closeDashboard();
+});
+
+function renderDashboardChart() {
+  const canvas = document.getElementById("dashboard-chart");
+  if (!canvas) return;
+  const ctx = canvas.getContext("2d");
+  const dark = document.body.classList.contains("theme-dark");
+  const quiet = document.body.classList.contains("theme-quiet");
+  const rectWidth = canvas.parentElement.clientWidth || 760;
+  const width = rectWidth;
+  const height = 280;
+  const dpr = window.devicePixelRatio || 1;
+  canvas.width = width * dpr;
+  canvas.height = height * dpr;
+  canvas.style.width = width + "px";
+  canvas.style.height = height + "px";
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  ctx.clearRect(0, 0, width, height);
+
+  const padTop = 20;
+  const padRight = 14;
+  const padBottom = 52;
+  const padLeft = 44;
+  const chartWidth = width - padLeft - padRight;
+  const chartHeight = height - padTop - padBottom;
+  const step = chartWidth / MODULES.length;
+  const barWidth = Math.max(28, Math.min(42, Math.floor(step * 0.42)));
+  const crisp = (value) => Math.round(value) + 0.5;
+  const colors = quiet
+    ? ["#aa9a88","#b7a895","#a99986","#b4a38f","#9f8e7a","#bcae9d","#907f6d"]
+    : ["#c0392b","#c99818","#2d6d9f","#3f7040","#764b97","#24786f","#8b5a2b"];
+
+  ctx.strokeStyle = dark ? "rgba(255,255,255,0.12)" : "rgba(26,22,18,0.09)";
+  ctx.lineWidth = 1;
+  ctx.font = "11px 'DM Mono', monospace";
+  ctx.fillStyle = dark ? "rgba(245,240,232,0.7)" : "rgba(26,22,18,0.54)";
+  ctx.textAlign = "right";
+  ctx.textBaseline = "middle";
+  for (let i = 0; i <= 4; i++) {
+    const value = i * 25;
+    const y = crisp(padTop + chartHeight - (chartHeight * value / 100));
+    ctx.beginPath();
+    ctx.moveTo(padLeft, y);
+    ctx.lineTo(width - padRight, y);
+    ctx.stroke();
+    ctx.fillText(value + "%", padLeft - 8, y);
+  }
+
+  MODULES.forEach((mod, mi) => {
+    const pct = getModulePct(mi);
+    const x = Math.round(padLeft + (step * mi) + (step - barWidth) / 2);
+    const barHeight = Math.round((chartHeight * pct) / 100);
+    const y = Math.round(padTop + chartHeight - barHeight);
+    ctx.fillStyle = colors[mi];
+    ctx.fillRect(x, y, barWidth, barHeight);
+
+    ctx.fillStyle = dark ? "rgba(255,255,255,0.9)" : "rgba(26,22,18,0.84)";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "alphabetic";
+    ctx.font = "bold 13px 'Shippori Mincho', serif";
+    ctx.fillText(pct.toFixed(0) + "%", x + barWidth / 2, y - 8);
+
+    ctx.fillStyle = dark ? "rgba(245,240,232,0.78)" : "rgba(26,22,18,0.72)";
+    ctx.textBaseline = "top";
+    ctx.font = "11px 'DM Mono', monospace";
+    ctx.fillText(mod.kanji, x + barWidth / 2, height - 30);
+  });
+}
+
+function formatCountdown(dateString) {
+  const target = new Date(dateString);
+  const diff = Math.max(0, target.getTime() - Date.now());
+  const totalSeconds = Math.floor(diff / 1000);
+  const days = Math.floor(totalSeconds / 86400);
+  const hours = Math.floor((totalSeconds % 86400) / 3600);
+  const minutes = Math.floor((totalSeconds % 3600) / 60);
+  const seconds = totalSeconds % 60;
+  return `${days}d ${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
+}
+
+function renderYearSelector() {
+  const select = document.getElementById("year-select");
+  if (!select) return;
+  const currentYear = getCurrentYear();
+  const yearOptions = Object.values(state.years)
+    .sort((a, b) => a.label.localeCompare(b.label, undefined, { numeric: true }))
+    .map((year) => `<option value="${escapeHtml(year.id)}">${escapeHtml(year.label)}${year.store.archived ? " (Archived)" : ""}</option>`);
+  const actionOptions = [
+    '<option value="__new__">+ New Year</option>',
+    `<option value="__archive__">${currentYear.store.archived ? "Unarchive Current Year" : "Archive Current Year"}</option>`,
+    '<option value="__delete__">Delete Current Year</option>'
+  ];
+  select.innerHTML = yearOptions.join("") + actionOptions.join("");
+  select.value = state.ui.currentYearId;
+  const eyebrow = document.getElementById("hero-eyebrow");
+  if (eyebrow) eyebrow.textContent = `University of Sheffield · ${currentYear.label} · 2025-26`;
+  const footer = document.getElementById("footer-label");
+  if (footer) footer.textContent = `UoS ${currentYear.label} · Progress Tracker`;
+}
+
+function handleYearDropdown(value) {
+  if (value === "__new__") return createNewYear();
+  if (value === "__archive__") return archiveCurrentYear();
+  if (value === "__delete__") return deleteCurrentYear();
+  switchYear(value);
+}
+
+function switchYear(yearId) {
+  if (!state.years[yearId]) return;
+  state.ui.currentYearId = yearId;
+  refreshActiveYear();
+  save();
+  renderYearSelector();
+  buildModules();
+  renderStickyExams();
+  updateGlobal();
+}
+
+function deleteCurrentYear() {
+  const year = getCurrentYear();
+  if (!year) return;
+  if (Object.keys(state.years).length === 1) {
+    alert("You need at least one year.");
+    return;
+  }
+  const confirmation = prompt(`Type yes to delete ${year.label}:`, "");
+  if (confirmation !== "yes") return;
+  delete state.years[year.id];
+  state.ui.currentYearId = Object.keys(state.years)[0];
+  refreshActiveYear();
+  save();
+  renderYearSelector();
+  buildModules();
+  renderStickyExams();
+  updateGlobal();
+}
+
+function createNewYear() {
+  const rawLabel = prompt("New year label:", `Year ${Object.keys(state.years).length + 1}`);
+  if (rawLabel === null || !rawLabel.trim()) return;
+  const label = rawLabel.trim();
+  const id = label.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") || `year-${Date.now()}`;
+  if (state.years[id]) {
+    alert("That year already exists.");
+    return;
+  }
+  state.years[id] = {
+    id,
+    label,
+    store: createYearStore(confirm("Use the current year's modules as a starting template?") ? MODULES : [])
+  };
+  state.ui.currentYearId = id;
+  refreshActiveYear();
+  save();
+  renderYearSelector();
+  buildModules();
+  renderStickyExams();
+  updateGlobal();
+}
+
+function archiveCurrentYear() {
+  const year = getCurrentYear();
+  if (!year || year.id === "year1" && year.store.archived) return;
+  year.store.archived = !year.store.archived;
+  save();
+  renderYearSelector();
+}
+
+function addModuleToCurrentYear() {
+  const code = prompt("Module code:", "NEW201");
+  if (code === null || !code.trim()) return;
+  const name = prompt("Module name:", "New Module");
+  if (name === null || !name.trim()) return;
+  const shortName = prompt("Short label for charts/buttons:", code.trim());
+  const credits = parseFloat(prompt("Credits:", "15") || "");
+  const courseworkWeight = parseFloat(prompt("Coursework weighting %:", "50") || "");
+  const examWeight = parseFloat(prompt("Exam weighting %:", String(Number.isFinite(courseworkWeight) ? 100 - courseworkWeight : 50)) || "");
+  MODULES.push({
+    name: name.trim(),
+    kanji: code.trim().toUpperCase(),
+    short: (shortName || code).trim(),
+    credits: Number.isFinite(credits) ? credits : 15,
+    cw: Number.isFinite(courseworkWeight) ? courseworkWeight : 50,
+    exam: Number.isFinite(examWeight) ? examWeight : 50,
+    topics: []
+  });
+  save();
+  refreshActiveYear();
+  buildModules();
+  updateGlobal();
+}
+
+function addTopicToModule(mi, event) {
+  if (event) event.stopPropagation();
+  const title = prompt("New topic title:");
+  if (!title || !title.trim()) return;
+  MODULES[mi].topics.push(title.trim());
+  save();
+  buildModules();
+  updateGlobal();
+}
+
+function deleteTopicFromModule(mi, ti, event) {
+  if (event) event.stopPropagation();
+  const title = MODULES[mi].topics[ti];
+  if (!title) return;
+  const confirmation = prompt(`Type yes to delete topic:\n${title}`, "");
+  if (confirmation !== "yes") return;
+
+  const store = getStore();
+  MODULES[mi].topics.splice(ti, 1);
+  const nextTopics = {};
+  Object.keys(store.topics).forEach((key) => {
+    const match = /^t_(\d+)_(\d+)$/.exec(key);
+    if (!match) {
+      nextTopics[key] = store.topics[key];
+      return;
+    }
+    const moduleIndex = Number(match[1]);
+    const topicIndex = Number(match[2]);
+    if (moduleIndex !== mi) {
+      nextTopics[key] = store.topics[key];
+      return;
+    }
+    if (topicIndex < ti) nextTopics[key] = store.topics[key];
+    if (topicIndex > ti) nextTopics[`t_${mi}_${topicIndex - 1}`] = store.topics[key];
+  });
+  store.topics = nextTopics;
+  save();
+  buildModules();
+  updateGlobal();
+}
+
+function renderStickyExams() {
+  const host = document.getElementById("live-exam-bar");
+  if (!host) return;
+  const store = getStore();
+  const now = Date.now();
+  const upcoming = store.customExams
+    .filter((exam) => new Date(exam.date).getTime() >= now - 60000)
+    .sort((a, b) => new Date(a.date) - new Date(b.date));
+  const changed = JSON.stringify(upcoming) !== JSON.stringify(store.customExams);
+  if (changed) {
+    store.customExams = upcoming;
+    save();
+  }
+  host.innerHTML = "";
+  upcoming.forEach((exam, index) => {
+    const target = new Date(exam.date);
+    const days = Math.floor((target.getTime() - now) / 86400000);
+    const card = document.createElement("div");
+    card.className = "exam-ticker";
+    card.innerHTML = `
+      <div class="ticker-mod">${escapeHtml(exam.mod)}</div>
+      <div class="ticker-time ${days <= 3 ? "urgent" : ""}">${formatCountdown(exam.date)}</div>
+      <div class="ticker-date">${target.toLocaleString([], { dateStyle: "medium", timeStyle: "short" })}</div>
+    `;
+    card.addEventListener("contextmenu", (event) => {
+      event.preventDefault();
+      removeExam(index);
+    });
+    card.addEventListener("dblclick", () => removeExam(index));
+    host.appendChild(card);
+  });
+  const button = document.createElement("button");
+  button.className = "add-exam-btn";
+  button.textContent = "+ Add Exam";
+  button.onclick = addExam;
+  host.appendChild(button);
+}
+
+function addExam() {
+  const mod = prompt("Module shortname (e.g. Materials):");
+  if (!mod) return;
+  const date = prompt("Exam date and time (YYYY-MM-DDTHH:MM), e.g. 2026-05-15T09:00:");
+  if (!date || Number.isNaN(new Date(date).getTime())) {
+    if (date) alert("Invalid date format.");
+    return;
+  }
+  getStore().customExams.push({ mod: mod.trim(), date });
+  save();
+  renderStickyExams();
+}
+
+function removeExam(index) {
+  const store = getStore();
+  if (!store.customExams[index]) return;
+  if (!confirm(`Remove ${store.customExams[index].mod} exam?`)) return;
+  store.customExams.splice(index, 1);
+  save();
+  renderStickyExams();
+}
+
+function buildModules() {
+  const container = document.getElementById("modules");
+  container.innerHTML = "";
+  const store = getStore();
+  MODULES.forEach((mod, mi) => {
+    const wrap = document.createElement("div");
+    wrap.className = `module b${mi}`;
+
+    const header = document.createElement("div");
+    header.className = "module-header";
+    header.innerHTML = `
+      <div class="mod-stripe c${mi}"></div>
+      <div>
+        <div class="mod-name">${escapeHtml(mod.name)}</div>
+        <div class="mod-kanji">${escapeHtml(mod.kanji)}</div>
+        <div class="module-links">
+          <button class="bb-link" id="bb-link-${mi}" type="button" onclick="openBlackboardLink(${mi}, event)">Set Blackboard</button>
+          <button class="formula-btn" id="formula-btn-${mi}" type="button" onclick="openFormulaLink(${mi}, event)">Docs</button>
+          <button class="bb-edit-btn" type="button" onclick="setBlackboardLink(${mi}, event)">Edit Link</button>
+          <button class="formula-edit-btn" type="button" onclick="setFormulaLink(${mi}, event)">Add Formula</button>
+        </div>
+      </div>
+      <div class="progress-section">
+        <div class="prog-header">
+          <span class="prog-done fc${mi}" id="mdone-${mi}">0</span>
+          <span class="prog-pct" id="mpct-${mi}">0.0% complete</span>
+        </div>
+        <div class="prog-track"><div class="prog-fill f${mi}" id="mfill-${mi}"></div></div>
+        <div class="prog-of">of ${mod.topics.length} topics</div>
+      </div>
+      <div class="inputs-grid">
+        <div class="field">
+          <label>Coursework %</label>
+          <input class="input" type="number" min="0" max="100" step="0.1" id="cw-${mi}" placeholder="-" value="${store.coursework[mi] ?? ""}">
+        </div>
+        <div class="field">
+          <label>Exam %</label>
+          <input class="input" type="number" min="0" max="100" step="0.1" id="exam-${mi}" placeholder="-" value="${store.exams[mi] ?? ""}">
+        </div>
+      </div>
+      <div class="final-col">
+        <div class="final-mark" id="mfinal-${mi}">-</div>
+        <div id="mcls-${mi}" class="final-cls"></div>
+      </div>
+      <div class="module-actions"></div>
+      <div class="chevron" id="chev-${mi}">&#9654;</div>
+    `;
+
+    const list = document.createElement("div");
+    list.className = "topic-list";
+
+    const notesWrap = document.createElement("div");
+    notesWrap.className = "notes-area-wrap";
+    const notes = document.createElement("textarea");
+    notes.className = "notes-area";
+    notes.rows = 2;
+    notes.placeholder = `Notes, mnemonics, thoughts on ${mod.short}...`;
+    notes.value = store.notes[mi] || "";
+    notes.addEventListener("input", () => {
+      store.notes[mi] = notes.value;
+      save();
+    });
+    notes.addEventListener("click", (event) => event.stopPropagation());
+    notesWrap.appendChild(notes);
+    list.appendChild(notesWrap);
+
+    const compactMarksWrap = document.createElement("div");
+    compactMarksWrap.className = "notes-area-wrap compact-marks-wrap";
+    compactMarksWrap.innerHTML = `
+      <div class="topic-tools">
+        <div class="topic-tools-title">Marks</div>
+      </div>
+      <div class="inputs-grid">
+        <div class="field">
+          <label>Coursework %</label>
+          <input class="input compact-cw" type="number" min="0" max="100" step="0.1" placeholder="-" value="${store.coursework[mi] ?? ""}">
+        </div>
+        <div class="field">
+          <label>Exam %</label>
+          <input class="input compact-ex" type="number" min="0" max="100" step="0.1" placeholder="-" value="${store.exams[mi] ?? ""}">
+        </div>
+      </div>
+    `;
+    list.appendChild(compactMarksWrap);
+
+    const formulaWrap = document.createElement("div");
+    formulaWrap.className = "formula-links-wrap";
+    formulaWrap.innerHTML = `
+      <div class="formula-links-head">
+        <div class="formula-links-title">Formula Sheets</div>
+        <button class="formula-edit-btn" type="button" onclick="setFormulaLink(${mi}, event)">Add Formula</button>
+      </div>
+      <div class="formula-links-list" id="formula-links-${mi}"></div>
+    `;
+    list.appendChild(formulaWrap);
+
+    const topicTools = document.createElement("div");
+    topicTools.className = "notes-area-wrap";
+    topicTools.innerHTML = `
+      <div class="topic-tools">
+        <div class="topic-tools-title">Topics</div>
+        <button class="mini-btn" type="button" onclick="addTopicToModule(${mi}, event)">Add Topic</button>
+      </div>
+    `;
+    list.appendChild(topicTools);
+
+    mod.topics.forEach((topic, ti) => {
+      const row = document.createElement("div");
+      row.className = "topic-row";
+      const main = document.createElement("label");
+      main.className = "topic-main";
+      const checkbox = document.createElement("input");
+      checkbox.type = "checkbox";
+      checkbox.checked = !!store.topics[topicKey(mi, ti)];
+      const label = document.createElement("span");
+      label.className = "topic-label" + (checkbox.checked ? " done" : "");
+      label.textContent = topic;
+      checkbox.addEventListener("change", (event) => {
+        event.stopPropagation();
+        store.topics[topicKey(mi, ti)] = checkbox.checked;
+        if (!checkbox.checked) delete store.topics[topicKey(mi, ti)];
+        label.className = "topic-label" + (checkbox.checked ? " done" : "");
+        save();
+        updateModule(mi);
+        updateGlobal();
+      });
+      const deleteButton = document.createElement("button");
+      deleteButton.type = "button";
+      deleteButton.className = "topic-delete-btn";
+      deleteButton.textContent = "Delete";
+      deleteButton.addEventListener("click", (event) => deleteTopicFromModule(mi, ti, event));
+      main.appendChild(checkbox);
+      main.appendChild(label);
+      row.appendChild(main);
+      row.appendChild(deleteButton);
+      list.appendChild(row);
+    });
+
+    header.addEventListener("click", (event) => {
+      if (event.target.closest("button") || event.target.closest("input") || event.target.closest("textarea") || event.target.closest("a")) return;
+      const open = list.classList.toggle("open");
+      document.getElementById(`chev-${mi}`).classList.toggle("open", open);
+    });
+
+    wrap.appendChild(header);
+    wrap.appendChild(list);
+    container.appendChild(wrap);
+
+    const cwInput = document.getElementById(`cw-${mi}`);
+    const exInput = document.getElementById(`exam-${mi}`);
+    const compactCw = compactMarksWrap.querySelector(".compact-cw");
+    const compactEx = compactMarksWrap.querySelector(".compact-ex");
+    cwInput.addEventListener("click", (event) => event.stopPropagation());
+    exInput.addEventListener("click", (event) => event.stopPropagation());
+    compactCw.addEventListener("click", (event) => event.stopPropagation());
+    compactEx.addEventListener("click", (event) => event.stopPropagation());
+
+    const syncMarks = () => {
+      cwInput.value = store.coursework[mi] ?? "";
+      exInput.value = store.exams[mi] ?? "";
+      compactCw.value = store.coursework[mi] ?? "";
+      compactEx.value = store.exams[mi] ?? "";
+    };
+
+    const handleCwChange = (value) => {
+      store.coursework[mi] = value;
+      save();
+      syncMarks();
+      updateModule(mi);
+      updateGlobal();
+    };
+    const handleExChange = (value) => {
+      store.exams[mi] = value;
+      save();
+      syncMarks();
+      updateModule(mi);
+      updateGlobal();
+    };
+
+    cwInput.addEventListener("input", (event) => {
+      handleCwChange(event.target.value);
+    });
+    exInput.addEventListener("input", (event) => {
+      handleExChange(event.target.value);
+    });
+    compactCw.addEventListener("input", (event) => {
+      handleCwChange(event.target.value);
+    });
+    compactEx.addEventListener("input", (event) => {
+      handleExChange(event.target.value);
+    });
+
+    syncMarks();
+    updateModule(mi);
+    updateBlackboardButton(mi);
+    updateFormulaButton(mi);
+  });
+}
+
+window.addEventListener("resize", () => {
+  if (!document.getElementById("dashboard-modal").classList.contains("hidden")) renderDashboardChart();
+});
+
+document.addEventListener("click", (event) => {
+  const panel = document.getElementById("prefs-panel");
+  if (!panel || panel.classList.contains("hidden")) return;
+  if (event.target.closest("#prefs-panel") || event.target.closest('button[onclick="togglePreferences()"]')) return;
+  panel.classList.add("hidden");
+});
+
+applyPreferences();
+renderYearSelector();
+buildModules();
+renderStickyExams();
+updateGlobal();
+setInterval(renderStickyExams, 1000);
+</script>
+</body>
+</html>
