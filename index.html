@@ -40,6 +40,107 @@ body {
   padding-top: 126px;
 }
 
+.deadline-splash {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(10, 12, 18, 0.55);
+  backdrop-filter: blur(8px);
+  animation: fadeIn 0.25s ease;
+}
+
+.deadline-splash.hidden {
+  display: none;
+}
+
+.deadline-splash-card {
+  width: min(420px, calc(100vw - 32px));
+  padding: 26px 28px;
+  border-radius: 10px;
+
+  background: rgba(20, 24, 32, 0.55);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+
+  border: 1px solid rgba(255,255,255,0.08);
+  box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+
+  position: relative;
+  overflow: hidden;
+}
+
+/* subtle accent line */
+.deadline-splash-card::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #d8c8b0, transparent);
+}
+
+/* close button */
+.deadline-splash-close {
+  position: absolute;
+  top: 12px;
+  right: 14px;
+  border: none;
+  background: none;
+  color: rgba(255,255,255,0.5);
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.deadline-splash-close:hover {
+  color: white;
+}
+
+/* label */
+.deadline-splash-label {
+  font-family: "DM Mono", monospace;
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.4);
+  margin-bottom: 10px;
+}
+
+/* title */
+.deadline-splash-title {
+  font-family: "Shippori Mincho", serif;
+  font-size: 22px;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 6px;
+}
+
+/* BIG timer */
+.deadline-splash-time {
+  font-family: "DM Mono", monospace;
+  font-size: 32px;
+  color: #d8c8b0;
+  letter-spacing: 0.04em;
+  text-shadow: 0 0 12px rgba(216,200,176,0.1);
+}
+
+/* animation */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.topic-row.dragging {
+  background: rgba(192,57,43,0.06);
+}
+
+.topic-row {
+  cursor: pointer;
+}
+
 .sticky-exams {
   position: fixed;
   top: 0;
@@ -176,7 +277,7 @@ body {
   background-image:
     radial-gradient(ellipse at 80% 0%, rgba(192,57,43,0.18) 0%, transparent 50%),
     radial-gradient(ellipse at 20% 100%, rgba(26,44,74,0.35) 0%, transparent 50%),
-    url("https://i.redd.it/qizurgr6zha21.png");
+    var(--hero-bg);
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -188,7 +289,7 @@ body {
   content: "";
   position: absolute;
   inset: 0;
-  background-image: url("https://i.redd.it/qizurgr6zha21.png");
+  background-image: var(--hero-bg);
   background-size: cover;
   background-position: center 35%;
   background-repeat: no-repeat;
@@ -231,12 +332,9 @@ body {
   gap: 12px;
 }
 .eyebrow::before {
-  content: "";
-  display: inline-block;
-  width: 28px;
-  height: 1px;
-  background: var(--vermillion);
+  display: none;
 }
+
 h1 {
   font-family: "Shippori Mincho", serif;
   font-size: clamp(48px, 5vw, 56px);
@@ -276,6 +374,19 @@ h1 {
   color: rgba(245,240,232,0.4);
   margin-bottom: 14px;
 }
+
+.calendar-btn {
+  background: var(--indigo);
+  border-color: var(--indigo);
+  color: white;
+}
+
+.calendar-btn:hover {
+  background: #243f6b;
+  border-color: #243f6b;
+  color: #487ccf;
+}
+
 .global-big {
   font-family: "Shippori Mincho", serif;
   font-size: 36px;
@@ -314,14 +425,15 @@ h1 {
   gap: 4px;
 }
 .dash-launch {
-  min-height: 128px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  cursor: pointer;
-  padding: 18px 12px;
+  transition: transform 0.28s ease, background 0.28s ease, border-color 0.28s ease;
 }
+
+.dash-launch:hover {
+  transform: translateY(-2px);
+  background: rgba(255,255,255,0.08);
+  border-color: rgba(255,255,255,0.28);
+}
+
 .dash-launch-icon {
   font-family: "Shippori Mincho", serif;
   font-size: 32px;
@@ -713,6 +825,7 @@ h1 {
   color: var(--muted);
   margin-bottom: 12px;
 }
+
 .prefs-grid {
   display: grid;
   gap: 12px;
@@ -722,6 +835,61 @@ h1 {
 }
 .compact-marks-wrap {
   display: none;
+}
+
+.bg-picker {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+  margin-top: 6px;
+}
+
+.bg-thumb {
+  width: 100%;
+  height: 100%;
+  display: block;
+  border: 1px solid var(--border2);
+  border-radius: 3px;
+  background-size: cover;
+  background-position: center;
+  cursor: pointer;
+}
+
+.bg-thumb:hover {
+  transform: scale(1.08);
+  border-color: var(--vermillion);
+}
+
+.bg-thumb.active {
+  border: 2px solid var(--vermillion);
+}
+
+.bg-thumb-wrap {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  min-width: 0;
+}
+
+
+.bg-delete-btn {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  width: 16px;
+  height: 16px;
+  border: 1px solid var(--border2);
+  border-radius: 50%;
+  background: var(--paper3);
+  color: var(--muted);
+  font-size: 11px;
+  cursor: pointer;
+  line-height: 1;
+}
+
+.bg-delete-btn:hover {
+  background: var(--vermillion);
+  color: white;
 }
 
 body.compact-ui .module-header {
@@ -774,9 +942,6 @@ body.compact-ui .prog-of {
 body.compact-ui .prog-pct {
   font-size: 10px;
 }
-body.hero-muted .hero::before {
-  filter: grayscale(100%) brightness(0.28) contrast(1.02);
-}
 
 body.theme-quiet {
   --vermillion: #8b7b68;
@@ -786,6 +951,7 @@ body.theme-quiet {
   --gold3: #c9bbab;
   --indigo: #8c8072;
 }
+
 body.theme-quiet .hero::before {
   filter: grayscale(100%) sepia(18%) brightness(0.5) contrast(0.95);
 }
@@ -902,28 +1068,125 @@ body.theme-dark .nav-btn:hover {
   background: #2b241e;
 }
 
+body.theme-dark-offwhite .c0,
+body.theme-dark-offwhite .c1,
+body.theme-dark-offwhite .c2,
+body.theme-dark-offwhite .c3,
+body.theme-dark-offwhite .c4,
+body.theme-dark-offwhite .c5,
+body.theme-dark-offwhite .c6 {
+  background: var(--indigo);
+}
+
+body.theme-dark-offwhite .hero-accent {
+  background: #d8c8b0;
+}
+
+body.theme-dark-offwhite .sticky-exams {
+  border-bottom-color: var(--indigo);
+}
+
+body.theme-dark-offwhite .eyebrow,
+body.theme-dark-offwhite .ticker-mod {
+  color: #d8c8b0;
+}
+
+body.theme-dark-offwhite .progress-fill,
+body.theme-dark-offwhite .prog-fill {
+  color: var(--indigo);
+}
+
+body.theme-dark-offwhite .classification-badge {
+  filter: grayscale(100%) sepia(18%);
+}
+
+body.theme-dark-offwhite .fc0,
+body.theme-dark-offwhite .fc1,
+body.theme-dark-offwhite .fc2,
+body.theme-dark-offwhite .fc3,
+body.theme-dark-offwhite .fc4,
+body.theme-dark-offwhite .fc5,
+body.theme-dark-offwhite .fc6 {
+  color: var(--indigo);
+}
+
+body.theme-dark-offwhite .f0,
+body.theme-dark-offwhite .f1,
+body.theme-dark-offwhite .f2,
+body.theme-dark-offwhite .f3,
+body.theme-dark-offwhite .f4,
+body.theme-dark-offwhite .f5,
+body.theme-dark-offwhite .f6 {
+  background: var(--indigo);
+}
+
+body.theme-dark-offwhite .b0::before,
+body.theme-dark-offwhite .b1::before,
+body.theme-dark-offwhite .b2::before,
+body.theme-dark-offwhite .b3::before,
+body.theme-dark-offwhite .b4::before,
+body.theme-dark-offwhite .b5::before,
+body.theme-dark-offwhite .b6::before {
+  background: var(--indigo);
+}
+
 .dashboard-modal {
   position: fixed;
   inset: 0;
+  z-index: 9999;
+
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 9999;
-  background: rgba(14,12,10,0.62);
-  backdrop-filter: blur(8px);
+
+  background: rgba(14,12,10,0.55);
+  backdrop-filter: blur(6px);
+
+  animation: dashboardBackdropFade 0.22s ease;
 }
-.dashboard-modal.hidden { display: none; }
+
 .dashboard-content {
+  animation: dashboardCardIn 0.32s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes dashboardBackdropFade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes dashboardCardIn {
+  from {
+    opacity: 0;
+    transform: scale(0.985);
+    filter: blur(5px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+    filter: blur(0);
+  }
+}
+
+.dashboard-modal.hidden {
+  display: none;
+}
+
+.dashboard-content {
+  width: min(720px, calc(100vw - 32px));
+  max-height: 88vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 22px;
+
   background: var(--paper);
   border: 1px solid var(--border);
   border-radius: 8px;
   padding: 28px;
-  max-width: 980px;
-  width: min(96vw, 980px);
-  max-height: 88vh;
-  overflow-y: auto;
   box-shadow: var(--shadow);
   position: relative;
+
+  animation: dashboardCardIn 0.32s cubic-bezier(0.16, 1, 0.3, 1);
+  transform-origin: center center;
 }
 .dashboard-close {
   position: absolute;
@@ -936,6 +1199,7 @@ body.theme-dark .nav-btn:hover {
   cursor: pointer;
 }
 .dashboard-close:hover { color: var(--vermillion); }
+
 .dashboard-title {
   font-family: "Shippori Mincho", serif;
   font-size: 20px;
@@ -944,8 +1208,8 @@ body.theme-dark .nav-btn:hover {
 }
 .dashboard-grid {
   display: grid;
-  grid-template-columns: 1.15fr 0.95fr;
-  gap: 16px;
+  grid-template-columns: 1fr;
+  gap: 14px;
 }
 .dashboard-card {
   background: var(--paper2);
@@ -987,10 +1251,11 @@ body.theme-dark .nav-btn:hover {
   padding: 14px;
 }
 #dashboard-chart {
-  display: block;
   width: 100%;
-  height: 280px;
+  max-width: 100%;
+  height: 220px;
 }
+
 .classification-badge {
   display: inline-flex;
   align-items: center;
@@ -1054,6 +1319,15 @@ body.theme-dark .nav-btn:hover {
 </head>
 <body>
 
+<div id="deadline-splash" class="deadline-splash hidden">
+  <div class="deadline-splash-card">
+    <button class="deadline-splash-close" type="button" onclick="closeDeadlineSplash()">×</button>
+    <div class="deadline-splash-label">Upcoming Deadline</div>
+    <div id="deadline-splash-title" class="deadline-splash-title"></div>
+    <div id="deadline-splash-time" class="deadline-splash-time"></div>
+  </div>
+</div>
+
 <div class="sticky-exams" id="live-exam-bar"></div>
 
 <div class="nav-bar">
@@ -1061,7 +1335,7 @@ body.theme-dark .nav-btn:hover {
     <select class="nav-select" id="year-select" onchange="handleYearDropdown(this.value)"></select>
   </div>
   <button class="nav-btn" onclick="document.getElementById('modules-start').scrollIntoView({ behavior: 'smooth' })">Jump to Modules</button>
-  <button class="nav-btn" onclick="window.open('https://calendar.google.com/calendar/u/0/r','_blank','noopener')">Open Google Calendar</button>
+  <button class="nav-btn calendar-btn" onclick="window.open('https://calendar.google.com/calendar/u/0/r','_blank','noopener')">Open Google Calendar</button>
   <button class="nav-btn" onclick="addModuleToCurrentYear()">Add Module</button>
   <button class="nav-btn" onclick="togglePreferences()">Preferences</button>
   <button class="nav-btn" onclick="openDashboard()">Dashboard</button>
@@ -1076,6 +1350,7 @@ body.theme-dark .nav-btn:hover {
         <option value="light">Light</option>
         <option value="quiet">Off-White</option>
         <option value="dark">Dark</option>
+        <option value="dark-offwhite">Dark Off-White</option>
       </select>
     </div>
     <div class="field">
@@ -1085,12 +1360,17 @@ body.theme-dark .nav-btn:hover {
         <option value="compact">Compact</option>
       </select>
     </div>
+    <div class="field custom-bg-field">
+      <label for="custom-bg-url">Add Background URL</label>
+      <input class="input" id="custom-bg-url" placeholder="Paste image link">
+      <button class="nav-btn" type="button" onclick="addCustomBackground()">
+    Add Background
+      </button>
+    </div>
+
     <div class="field">
-      <label for="pref-hero">Hero Image</label>
-      <select class="nav-select" id="pref-hero" onchange="setPreference('hero', this.value)">
-        <option value="full">Full</option>
-        <option value="muted">Muted</option>
-      </select>
+      <label>Hero Background</label>
+      <div class="bg-picker" id="bg-picker"></div>
     </div>
     <div class="field">
       <label>Storage</label>
@@ -1105,7 +1385,7 @@ body.theme-dark .nav-btn:hover {
   <div class="hero-accent"></div>
   <div class="hero-inner">
     <div class="eyebrow" id="hero-eyebrow">University of Sheffield · Year 1 · 2025-26</div>
-    <h1>Aerospace Engineering</h1>
+    <h1 id="hero-title">Y1 Aerospace Engineering</h1>
     <div class="hero-grid">
       <div class="washi-card">
         <div class="card-label">Overall Progress</div>
@@ -1187,6 +1467,130 @@ const BASE_MODULES = [
     topics:["Functions","Differentiation","Integration","Complex Numbers","Vectors","Matrices","Differential Equations"]}
 ];
 
+const HERO_BACKGROUNDS = {
+  bg1: "https://i.redd.it/qizurgr6zha21.png",
+  bg2: "https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?q=80&w=1172&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+  bg3: "https://www.easyairportparking.uk/assets/boing-747-bild-1.jpg",
+  bg4: "https://media.defense.gov/2021/May/25/2002727568/2000/2000/0/180108-F-KX404-9002.JPG",
+  bg5: "https://www.bremont.com/cdn/shop/articles/Concorde_G-BOAA_4_bc1e1d5d-4ac4-42bf-9608-73925821dc1d.jpg?v=1634534775&width=1500",
+  bg6: "https://nafc.org.au/wp-content/uploads/2021/07/Q400drop_QFES-image-1-scaled-e1627614915571.jpeg",
+  bg7: "https://www.flightradar24.com/blog/wp-content/uploads/2025/09/737-NG-Landing-Gear-Lever-1024x693.jpg",
+  bg8: "https://images.squarespace-cdn.com/content/v1/564d14dfe4b0290681184a82/1479853193364-00HU0OCI0KNVLZQRKMCX/20160819-JI-Lake+Clark+National+Park-_DSF2859.jpg?format=1500w",
+  bg9: "https://cdn.mos.cms.futurecdn.net/fnfyE7cDwV9JWCopNK8Ycb-1024-80.jpg",
+  bg10: "https://www.geaerospace.com/news/sites/default/files/t901%20blog%20hero.png"
+};
+
+let deadlineSplashInterval = null;
+let isDraggingTopics = false;
+let dragTopicValue = null;
+
+function setTopicCheckbox(checkbox, mi, ti, value) {
+  const store = getStore();
+
+  checkbox.checked = value;
+
+  if (value) store.topics[topicKey(mi, ti)] = true;
+  else delete store.topics[topicKey(mi, ti)];
+
+  const label = checkbox.parentElement.querySelector(".topic-label");
+  if (label) label.className = "topic-label" + (value ? " done" : "");
+
+  save();
+  updateModule(mi);
+  updateGlobal();
+}
+
+function startTopicDrag(checkbox) {
+  isDraggingTopics = true;
+  dragTopicValue = checkbox.checked;
+}
+
+function dragOverTopic(checkbox, mi, ti) {
+  if (!isDraggingTopics) return;
+  setTopicCheckbox(checkbox, mi, ti, dragTopicValue);
+}
+
+function stopTopicDrag() {
+  isDraggingTopics = false;
+  dragTopicValue = null;
+}
+
+function showDeadlineSplash() {
+  const store = getStore();
+  const exams = store.customExams || [];
+  const now = Date.now();
+
+  const upcoming = exams
+    .filter(exam => new Date(exam.date).getTime() > now)
+    .sort((a, b) => new Date(a.date) - new Date(b.date))[0];
+
+  if (!upcoming) return;
+
+  const titleEl = document.getElementById("deadline-splash-title");
+  const timeEl = document.getElementById("deadline-splash-time");
+
+  document.querySelector(".deadline-splash-label").textContent = "Nearest Deadline";
+  titleEl.textContent = upcoming.mod || "Upcoming deadline";
+
+  function updateSplashTimer() {
+    timeEl.textContent = formatCountdown(upcoming.date);
+  }
+
+  updateSplashTimer();
+
+  clearInterval(deadlineSplashInterval);
+  deadlineSplashInterval = setInterval(updateSplashTimer, 1000);
+
+  document.getElementById("deadline-splash").classList.remove("hidden");
+}
+
+function closeDeadlineSplash() {
+  document.getElementById("deadline-splash").classList.add("hidden");
+
+  if (deadlineSplashInterval) {
+    clearInterval(deadlineSplashInterval);
+    deadlineSplashInterval = null;
+  }
+}
+
+function renderBackgroundPicker() {
+  const picker = document.getElementById("bg-picker");
+  if (!picker) return;
+
+  const allBackgrounds = { ...HERO_BACKGROUNDS, ...(preferences.customBackgrounds || {}) };
+
+  picker.innerHTML = Object.entries(allBackgrounds).map(([key, url]) => `
+    <div class="bg-thumb-wrap">
+      <button 
+        class="bg-thumb ${preferences.hero === key ? "active" : ""}"
+        style="background-image: url('${url}')"
+        onclick="setPreference('hero', '${key}'); renderBackgroundPicker();"
+        title="${key}">
+      </button>
+
+      ${key.startsWith("custom_") ? `
+        <button class="bg-delete-btn" onclick="deleteCustomBackground('${key}')">×</button>
+      ` : ""}
+    </div>
+  `).join("");
+}
+
+function deleteCustomBackground(key) {
+  if (!preferences.customBackgrounds || !preferences.customBackgrounds[key]) return;
+
+  const confirmDelete = confirm("Delete this custom background?");
+  if (!confirmDelete) return;
+
+  delete preferences.customBackgrounds[key];
+
+  if (preferences.hero === key) {
+    preferences.hero = "bg1";
+  }
+
+  localStorage.setItem(PREFS_KEY, JSON.stringify(preferences));
+  applyPreferences();
+}
+
 const KEY = "uos_aero_tracker_v4";
 const PREFS_KEY = "uos_aero_prefs_v1";
 const LEGACY_STATE_KEYS = ["uos_aero_jp_v2", "uos_aero_jp_v1"];
@@ -1202,7 +1606,7 @@ const defaultState = {
 let MODULES = [];
 let TOTAL_CREDITS = 0;
 const preferences = Object.assign(
-  { theme: "light", density: "comfortable", hero: "full" },
+  { theme: "light", density: "comfortable", hero: "bg1" },
   loadJson(PREFS_KEY, {})
 );
 
@@ -1338,14 +1742,20 @@ refreshActiveYear();
 function applyPreferences() {
   document.body.classList.toggle("theme-dark", preferences.theme === "dark");
   document.body.classList.toggle("theme-quiet", preferences.theme === "quiet");
+  document.body.classList.toggle("theme-dark-offwhite", preferences.theme === "dark-offwhite");
   document.body.classList.toggle("compact-ui", preferences.density === "compact");
-  document.body.classList.toggle("hero-muted", preferences.hero === "muted");
   const themeSelect = document.getElementById("pref-theme");
   const densitySelect = document.getElementById("pref-density");
-  const heroSelect = document.getElementById("pref-hero");
+  const hero = document.querySelector(".hero");
+  const allBackgrounds = { ...HERO_BACKGROUNDS, ...(preferences.customBackgrounds || {}) };
+
+  if (hero && allBackgrounds[preferences.hero]) {
+    hero.style.setProperty("--hero-bg", `url("${allBackgrounds[preferences.hero]}")`);
+  }
   if (themeSelect) themeSelect.value = preferences.theme;
   if (densitySelect) densitySelect.value = preferences.density;
-  if (heroSelect) heroSelect.value = preferences.hero;
+
+  renderBackgroundPicker();
 }
 
 function setPreference(key, value) {
@@ -1353,6 +1763,27 @@ function setPreference(key, value) {
   localStorage.setItem(PREFS_KEY, JSON.stringify(preferences));
   applyPreferences();
   if (!document.getElementById("dashboard-modal").classList.contains("hidden")) renderDashboardChart();
+}
+
+function addCustomBackground() {
+  const input = document.getElementById("custom-bg-url");
+  const url = safeUrl(input.value);
+
+  if (!url) return;
+
+  const customKey = "custom_" + Date.now();
+
+  if (!preferences.customBackgrounds) {
+    preferences.customBackgrounds = {};
+  }
+
+  preferences.customBackgrounds[customKey] = url;
+  preferences.hero = customKey;
+
+  localStorage.setItem(PREFS_KEY, JSON.stringify(preferences));
+
+  input.value = "";
+  applyPreferences();
 }
 
 function togglePreferences() {
@@ -1663,7 +2094,7 @@ function renderDashboardChart() {
   const quiet = document.body.classList.contains("theme-quiet");
   const rectWidth = canvas.parentElement.clientWidth || 760;
   const width = rectWidth;
-  const height = 280;
+  const height = 220;
   const dpr = window.devicePixelRatio || 1;
   canvas.width = width * dpr;
   canvas.height = height * dpr;
@@ -1681,9 +2112,13 @@ function renderDashboardChart() {
   const step = chartWidth / MODULES.length;
   const barWidth = Math.max(28, Math.min(42, Math.floor(step * 0.42)));
   const crisp = (value) => Math.round(value) + 0.5;
-  const colors = quiet
-    ? ["#aa9a88","#b7a895","#a99986","#b4a38f","#9f8e7a","#bcae9d","#907f6d"]
-    : ["#c0392b","#c99818","#2d6d9f","#3f7040","#764b97","#24786f","#8b5a2b"];
+  const darkOffwhite = document.body.classList.contains("theme-dark-offwhite");
+
+  const colors = darkOffwhite
+    ? ["#1a2c4a", "#1a2c4a", "#1a2c4a", "#1a2c4a", "#1a2c4a", "#1a2c4a", "#1a2c4a"]
+    : quiet
+      ? ["#aa9a88","#b7a895","#a99986","#b4a38f","#9f8e7a","#bcae9d","#907f6d"]
+      : ["#c0392b","#c99818","#2d6d9f","#3f7040","#764b97","#24786f","#8b5a2b"];
 
   ctx.strokeStyle = dark ? "rgba(255,255,255,0.12)" : "rgba(26,22,18,0.09)";
   ctx.lineWidth = 1;
@@ -1748,7 +2183,17 @@ function renderYearSelector() {
   select.innerHTML = yearOptions.join("") + actionOptions.join("");
   select.value = state.ui.currentYearId;
   const eyebrow = document.getElementById("hero-eyebrow");
-  if (eyebrow) eyebrow.textContent = `University of Sheffield · ${currentYear.label} · 2025-26`;
+  const yearNumber = parseInt(currentYear.label.match(/\d+/)?.[0] || "1", 10);
+  const startYear = 2025 + (yearNumber - 1);
+  const endYear = startYear + 1;
+
+  if (eyebrow) {
+  eyebrow.textContent = `University of Sheffield · ${currentYear.label} · ${startYear}-${String(endYear).slice(2)}`;
+}
+  const title = document.getElementById("hero-title");
+  if (title) {
+    title.textContent = `Y${yearNumber} Aerospace Engineering`;
+}
   const footer = document.getElementById("footer-label");
   if (footer) footer.textContent = `UoS ${currentYear.label} · Progress Tracker`;
 }
@@ -1847,9 +2292,23 @@ function addModuleToCurrentYear() {
 
 function addTopicToModule(mi, event) {
   if (event) event.stopPropagation();
-  const title = prompt("New topic title:");
-  if (!title || !title.trim()) return;
-  MODULES[mi].topics.push(title.trim());
+
+  const input = prompt(
+    'Add topic(s).\n\nSingle topic: Aerodynamics intro\nMultiple topics: "Topic 1" "Topic 2" "Topic 3"'
+  );
+
+  if (!input || !input.trim()) return;
+
+  const quotedTopics = [...input.matchAll(/"([^"]+)"/g)]
+    .map(match => match[1].trim())
+    .filter(Boolean);
+
+  const topicsToAdd = quotedTopics.length
+    ? quotedTopics
+    : [input.trim()];
+
+  MODULES[mi].topics.push(...topicsToAdd);
+
   save();
   buildModules();
   updateGlobal();
@@ -1919,7 +2378,7 @@ function renderStickyExams() {
   });
   const button = document.createElement("button");
   button.className = "add-exam-btn";
-  button.textContent = "+ Add Exam";
+  button.textContent = "+ Add Deadline";
   button.onclick = addExam;
   host.appendChild(button);
 }
@@ -2063,14 +2522,24 @@ function buildModules() {
       const label = document.createElement("span");
       label.className = "topic-label" + (checkbox.checked ? " done" : "");
       label.textContent = topic;
-      checkbox.addEventListener("change", (event) => {
+      checkbox.addEventListener("mousedown", (event) => {
+        event.preventDefault();
         event.stopPropagation();
-        store.topics[topicKey(mi, ti)] = checkbox.checked;
-        if (!checkbox.checked) delete store.topics[topicKey(mi, ti)];
-        label.className = "topic-label" + (checkbox.checked ? " done" : "");
-        save();
-        updateModule(mi);
-        updateGlobal();
+
+        isDraggingTopics = true;
+        dragTopicValue = !checkbox.checked;
+
+        setTopicCheckbox(checkbox, mi, ti, dragTopicValue);
+      });
+
+      checkbox.addEventListener("click", (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+      });
+
+      main.addEventListener("mouseenter", () => {
+        if (!isDraggingTopics) return;
+        setTopicCheckbox(checkbox, mi, ti, dragTopicValue);
       });
       const deleteButton = document.createElement("button");
       deleteButton.type = "button";
@@ -2156,11 +2625,15 @@ document.addEventListener("click", (event) => {
   panel.classList.add("hidden");
 });
 
+document.addEventListener("mouseup", stopTopicDrag);
+
 applyPreferences();
 renderYearSelector();
 buildModules();
 renderStickyExams();
 updateGlobal();
+
+setTimeout(showDeadlineSplash, 500);
 setInterval(renderStickyExams, 1000);
 </script>
 </body>
