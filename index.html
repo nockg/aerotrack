@@ -34,10 +34,33 @@ html { scroll-behavior: smooth; }
 body {
   background-color: var(--paper);
   background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%231a1612' fill-opacity='0.025'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  background-size: auto;
+  background-repeat: repeat;
+  background-position: center;
   color: var(--ink);
   font-family: "Cormorant Garamond", serif;
   min-height: 100vh;
-  padding-top: 126px;
+  padding-top: 116px;
+}
+body.has-body-background::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  background:
+    linear-gradient(rgba(245,240,232,0.9), rgba(245,240,232,0.9)),
+    var(--page-bg);
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+body.theme-dark.has-body-background::before {
+  background:
+    linear-gradient(rgba(21,18,15,0.84), rgba(21,18,15,0.84)),
+    var(--page-bg);
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
 }
 
 body.font-sans,
@@ -296,6 +319,7 @@ body.font-mono .deadline-splash-title {
   display: flex;
   gap: 12px;
   align-items: center;
+  margin-bottom: 0;
 }
 .prefs-toggle-btn {
   margin-left: auto;
@@ -361,7 +385,10 @@ body.font-mono .deadline-splash-title {
   padding: 44px 32px 38px;
   position: relative;
   overflow: hidden;
+  margin-top: -10;
+  padding-top: 54px;
 }
+
 .hero::before {
   content: "";
   position: absolute;
@@ -580,6 +607,7 @@ h1 {
   overflow: hidden;
   transition: border-color 0.2s, box-shadow 0.2s;
   position: relative;
+  padding-top: 8px;
 }
 .module:hover {
   border-color: var(--border2);
@@ -766,6 +794,12 @@ h1 {
   font-size: 12px;
   line-height: 1;
 }
+.module-delete-corner {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 3;
+}
 .module-delete-btn:hover {
   background: rgba(192,57,43,0.14);
 }
@@ -814,6 +848,22 @@ h1 {
   letter-spacing: 0.12em;
   color: var(--muted);
   text-transform: uppercase;
+}
+.topic-entry-row {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 10px;
+}
+.topic-entry-row .input {
+  flex: 1;
+  min-width: 0;
+}
+.topic-entry-help {
+  font-family: "Cormorant Garamond", serif;
+  font-size: 14px;
+  color: var(--muted);
+  margin-bottom: 4px;
 }
 .formula-links-title, .relevant-links-title {
   font-family: "DM Mono", monospace;
@@ -922,8 +972,13 @@ h1 {
   gap: 12px;
   padding: 9px 20px 9px 42px;
   transition: background 0.15s;
+  cursor: grab;
 }
 .topic-row:hover { background: rgba(26,22,18,0.03); }
+.topic-row.reordering {
+  opacity: 0.55;
+  background: rgba(26,44,74,0.06);
+}
 .topic-main {
   display: flex;
   align-items: flex-start;
@@ -994,6 +1049,17 @@ h1 {
   text-transform: uppercase;
 }
 .topic-edit-btn:hover { color: var(--gold); }
+
+.topic-drag-handle {
+  border: none;
+  background: none;
+  color: var(--faint);
+  font-family: "DM Mono", monospace;
+  font-size: 12px;
+  cursor: grab;
+  padding: 2px 0;
+}
+.topic-drag-handle:hover { color: var(--muted); }
 
 .prefs-panel {
   position: fixed;
@@ -1232,6 +1298,9 @@ body.theme-dark .topic-label {
 body.theme-dark .topic-row:hover {
   background: rgba(255,255,255,0.04);
 }
+body.theme-dark .topic-row.reordering {
+  background: rgba(255,255,255,0.08);
+}
 body.theme-dark .prog-done,
 body.theme-dark .final-mark,
 body.theme-dark .mod-name,
@@ -1246,8 +1315,59 @@ body.theme-dark .prog-of,
 body.theme-dark .mod-kanji,
 body.theme-dark .field label,
 body.theme-dark .topic-tools-title,
-body.theme-dark .formula-links-title {
+body.theme-dark .formula-links-title,
+body.theme-dark .timeline-notes-label {
   color: #bfae99;
+}
+body.theme-dark .topic-entry-help {
+  color: #bfae99;
+}
+body.theme-dark .setup-copy,
+body.theme-dark .setup-choice-detail {
+  color: #d9cbb9;
+}
+body.theme-dark .setup-choice {
+  background: rgba(255,255,255,0.04);
+  border-color: rgba(255,255,255,0.1);
+}
+body.theme-dark .setup-choice:hover {
+  border-color: rgba(255,255,255,0.2);
+}
+body.theme-dark .setup-choice.active {
+  background: rgba(212,160,23,0.12);
+  border-color: #d4a017;
+}
+body.theme-dark .setup-choice-title {
+  color: #f5f0e8;
+}
+body.theme-dark .timeline-notes {
+  background: rgba(255,255,255,0.08);
+  color: #f5f0e8;
+  border-color: rgba(255,255,255,0.16);
+}
+body.theme-dark .timeline-notes::placeholder {
+  color: rgba(245,240,232,0.45);
+}
+body.theme-dark .timeline-badge.countdown {
+  background: rgba(245,240,232,0.12);
+  color: #fff;
+  border-color: rgba(245,240,232,0.2);
+}
+body.theme-dark .timeline-badge.countdown.urgent {
+  background: rgba(192,57,43,0.18);
+  color: var(--vermillion2);
+  border-color: rgba(192,57,43,0.34);
+}
+body.theme-dark .timeline-badge:not(.countdown) {
+  background: rgba(255,255,255,0.08);
+  color: #f5f0e8;
+  border-color: rgba(255,255,255,0.16);
+}
+body.theme-dark .ticker-time {
+  color: #fff;
+}
+body.theme-dark .ticker-time.urgent {
+  color: var(--vermillion2);
 }
 body.theme-dark .bb-link {
   background: #000;
@@ -1643,6 +1763,109 @@ body.theme-dark-offwhite .b6::before {
   justify-content: flex-end;
   margin-top: 10px;
 }
+
+.deadline-form-content {
+  width: min(520px, calc(100vw - 32px));
+}
+
+.deadline-form-grid {
+  display: grid;
+  gap: 14px;
+}
+
+.setup-content {
+  width: min(760px, calc(100vw - 32px));
+}
+
+.setup-grid {
+  display: grid;
+  gap: 16px;
+}
+
+.setup-copy {
+  font-family: "Cormorant Garamond", serif;
+  font-size: 18px;
+  line-height: 1.5;
+  color: #5a4d40;
+}
+
+.setup-fields {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.setup-fields .field:first-child,
+.setup-fields .field:nth-child(2),
+.setup-fields .field:nth-child(3) {
+  grid-column: 1 / -1;
+}
+
+.setup-template-block {
+  display: grid;
+  gap: 12px;
+}
+
+.setup-template-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.setup-choice {
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--paper2);
+  text-align: left;
+  padding: 16px;
+  cursor: pointer;
+  transition: border-color 0.18s ease, transform 0.18s ease, background 0.18s ease;
+}
+
+.setup-choice:hover {
+  border-color: rgba(26,22,18,0.22);
+  transform: translateY(-1px);
+}
+
+.setup-choice.active {
+  border-color: var(--gold2);
+  background: rgba(212,160,23,0.08);
+}
+
+.setup-choice-title {
+  font-family: "Cormorant Garamond", serif;
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 6px;
+}
+
+.setup-choice-detail {
+  font-family: "Cormorant Garamond", serif;
+  font-size: 16px;
+  line-height: 1.45;
+  color: var(--slate);
+}
+
+.setup-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.deadline-form-row {
+  display: grid;
+  grid-template-columns: 1fr 160px;
+  gap: 12px;
+}
+
+.deadline-form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 8px;
+}
 .footer {
   text-align: center;
   padding: 40px 0;
@@ -1753,6 +1976,11 @@ body.theme-dark-offwhite .b6::before {
     padding: 18px;
   }
 
+  .setup-fields,
+  .setup-template-grid {
+    grid-template-columns: 1fr;
+  }
+
   .template-actions {
     grid-template-columns: 1fr;
   }
@@ -1837,6 +2065,13 @@ body.theme-dark-offwhite .b6::before {
       <input class="input" id="custom-bg-url" placeholder="Paste image link">
       <button class="nav-btn" type="button" onclick="addCustomBackground()">
     Add Background
+      </button>
+    </div>
+    <div class="field custom-bg-field">
+      <label for="body-bg-url">Page Background URL</label>
+      <input class="input" id="body-bg-url" placeholder="Paste page background image link">
+      <button class="nav-btn" type="button" onclick="setBodyBackground()">
+    Set Page Background
       </button>
     </div>
 
@@ -1933,6 +2168,153 @@ body.theme-dark-offwhite .b6::before {
   </div>
 </div>
 
+<div id="deadline-form-modal" class="dashboard-modal hidden">
+  <div class="dashboard-content deadline-form-content">
+    <button class="dashboard-close" onclick="closeDeadlineForm()">X</button>
+    <div class="timeline-subtitle">Deadlines</div>
+    <div class="dashboard-title">Add Deadline</div>
+    <div class="deadline-form-grid">
+      <div class="field">
+        <label for="deadline-title-input">Deadline Title</label>
+        <input class="input" id="deadline-title-input" placeholder="Coursework hand-in">
+      </div>
+      <div class="deadline-form-row">
+        <div class="field">
+          <label for="deadline-date-input">Date</label>
+          <input class="input" id="deadline-date-input" type="date">
+        </div>
+        <div class="field">
+          <label for="deadline-time-input">Time</label>
+          <input class="input" id="deadline-time-input" type="time">
+        </div>
+      </div>
+      <div class="field">
+        <label for="deadline-note-input">Notes</label>
+        <textarea class="timeline-notes" id="deadline-note-input" placeholder="Add context, room, prep checklist, what to bring..."></textarea>
+      </div>
+      <div class="deadline-form-actions">
+        <button class="nav-btn" type="button" onclick="closeDeadlineForm()">Cancel</button>
+        <button class="nav-btn" type="button" onclick="saveDeadlineForm()">Save Deadline</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div id="module-form-modal" class="dashboard-modal hidden">
+  <div class="dashboard-content deadline-form-content">
+    <button class="dashboard-close" type="button" onclick="closeModuleForm()">X</button>
+    <div class="timeline-subtitle">Modules</div>
+    <div class="dashboard-title">Add Module</div>
+    <div class="deadline-form-grid">
+      <div class="field">
+        <label for="module-name-input">Module Name</label>
+        <input class="input" id="module-name-input" placeholder="Aerospace Structures">
+      </div>
+      <div class="deadline-form-row">
+        <div class="field">
+          <label for="module-code-input">Module Code</label>
+          <input class="input" id="module-code-input" placeholder="NEW201">
+        </div>
+        <div class="field">
+          <label for="module-short-input">Short Label</label>
+          <input class="input" id="module-short-input" placeholder="Structures">
+        </div>
+      </div>
+      <div class="deadline-form-row">
+        <div class="field">
+          <label for="module-credits-input">Credits</label>
+          <input class="input" id="module-credits-input" type="number" min="0" step="0.5" placeholder="15">
+        </div>
+        <div class="field">
+          <label for="module-cw-input">Coursework Weight %</label>
+          <input class="input" id="module-cw-input" type="number" min="0" max="100" step="0.1" placeholder="50">
+        </div>
+      </div>
+      <div class="field">
+        <label for="module-exam-input">Exam Weight %</label>
+        <input class="input" id="module-exam-input" type="number" min="0" max="100" step="0.1" placeholder="50">
+      </div>
+      <div class="deadline-form-actions">
+        <button class="nav-btn" type="button" onclick="closeModuleForm()">Cancel</button>
+        <button class="nav-btn" type="button" onclick="saveModuleForm()">Save Module</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="link-form-modal" class="dashboard-modal hidden">
+  <div class="dashboard-content deadline-form-content">
+    <button class="dashboard-close" type="button" onclick="closeLinkForm()">X</button>
+    <div class="timeline-subtitle" id="link-form-subtitle">Links</div>
+    <div class="dashboard-title" id="link-form-title">Add Link</div>
+    <div class="deadline-form-grid">
+      <div class="field" id="link-name-field">
+        <label for="link-name-input" id="link-name-label">Link Name</label>
+        <input class="input" id="link-name-input" placeholder="Reference Sheet">
+      </div>
+      <div class="field">
+        <label for="link-url-input" id="link-url-label">URL</label>
+        <input class="input" id="link-url-input" placeholder="https://...">
+      </div>
+      <div class="deadline-form-actions">
+        <button class="nav-btn" type="button" onclick="closeLinkForm()">Cancel</button>
+        <button class="nav-btn" type="button" onclick="saveLinkForm()" id="link-form-save">Save Link</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="course-setup-modal" class="dashboard-modal hidden">
+  <div class="dashboard-content setup-content">
+    <button class="dashboard-close" id="course-setup-close" type="button" onclick="closeCourseSetupModal()">X</button>
+    <div class="timeline-subtitle">Course Setup</div>
+    <div class="dashboard-title" id="course-setup-title">Set Up Your Tracker</div>
+    <div class="setup-grid">
+      <div class="setup-copy" id="course-setup-copy">Tell me a little about the course so the tracker can start off feeling like yours.</div>
+      <div class="setup-fields">
+        <div class="field">
+          <label for="setup-name-input">Your Name</label>
+          <input class="input" id="setup-name-input" placeholder="Aisha">
+        </div>
+        <div class="field">
+          <label for="setup-university-input">University / School</label>
+          <input class="input" id="setup-university-input" placeholder="University of Sheffield">
+        </div>
+        <div class="field">
+          <label for="setup-course-input">Course</label>
+          <input class="input" id="setup-course-input" placeholder="Aerospace Engineering">
+        </div>
+        <div class="field">
+          <label for="setup-start-year-input">Academic Start Year</label>
+          <input class="input" id="setup-start-year-input" type="number" min="2000" max="2100" step="1">
+        </div>
+        <div class="field">
+          <label for="setup-credits-input">Target Credits</label>
+          <input class="input" id="setup-credits-input" type="number" min="0" step="1">
+        </div>
+      </div>
+      <div class="setup-template-block" id="setup-template-block">
+        <div class="timeline-subtitle">How do you want to start?</div>
+        <div class="setup-template-grid">
+          <button class="setup-choice active" id="setup-choice-blank" type="button" onclick="selectSetupTemplate('blank')">
+            <div class="setup-choice-title">Start Blank</div>
+            <div class="setup-choice-detail">Begin with an empty Year 1 so you can add your own modules, weights, topics, and deadlines from scratch.</div>
+          </button>
+          <button class="setup-choice" id="setup-choice-aero" type="button" onclick="selectSetupTemplate('aero')">
+            <div class="setup-choice-title">Y1 Aero Template</div>
+            <div class="setup-choice-detail">Load the Sheffield Year 1 Aerospace module list as a ready-made starting point that you can still edit afterwards.</div>
+          </button>
+        </div>
+      </div>
+      <div class="setup-actions">
+        <button class="nav-btn" id="course-setup-cancel" type="button" onclick="closeCourseSetupModal()">Cancel</button>
+        <button class="nav-btn" type="button" onclick="saveCourseSetup()">Save Setup</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div class="content" id="modules-start">
   <div id="modules"></div>
   <div class="footer" id="footer-label">Course Progress Tracker</div>
@@ -1973,6 +2355,10 @@ let deadlineSplashInterval = null;
 let deadlineTimelineInterval = null;
 let isDraggingTopics = false;
 let dragTopicValue = null;
+let draggedTopic = null;
+let courseSetupInitial = false;
+let selectedSetupTemplate = "blank";
+const openModules = new Set();
 
 function setTopicCheckbox(checkbox, mi, ti, value) {
   const store = getStore();
@@ -2091,6 +2477,7 @@ const LEGACY_FORMULA_KEYS = ["uos_formula_links_v2", "uos_formula_links_v1"];
 const LEGACY_EXAM_KEYS = ["uos_exams_v2", "uos_exams_v1"];
 
 const defaultProfile = {
+  name: "",
   university: "",
   course: "",
   startYear: new Date().getFullYear(),
@@ -2107,7 +2494,7 @@ const defaultState = {
 let MODULES = [];
 let TOTAL_CREDITS = 0;
 const preferences = Object.assign(
-  { theme: "light", density: "comfortable", font: "japanese", hero: "bg1" },
+  { theme: "light", density: "comfortable", font: "japanese", hero: "bg1", bodyBackground: "" },
   loadJson(PREFS_KEY, loadJson(LEGACY_PREFS_KEY, {}))
 );
 
@@ -2254,38 +2641,94 @@ ensureYearsState();
 function setupCourseIfNeeded() {
   const profile = state.profile || deepClone(defaultProfile);
   if (profile.course && profile.university) return;
-  editCourseProfile(true);
+  openCourseSetupModal(true);
 }
 
-function editCourseProfile(isInitialSetup = false) {
+function selectSetupTemplate(template) {
+  selectedSetupTemplate = template === "aero" ? "aero" : "blank";
+  const blank = document.getElementById("setup-choice-blank");
+  const aero = document.getElementById("setup-choice-aero");
+  if (blank) blank.classList.toggle("active", selectedSetupTemplate === "blank");
+  if (aero) aero.classList.toggle("active", selectedSetupTemplate === "aero");
+}
+
+function openCourseSetupModal(isInitialSetup = false) {
+  courseSetupInitial = isInitialSetup;
   const current = Object.assign({}, defaultProfile, state.profile || {});
-  const university = prompt("University / school name:", current.university || "Your University");
-  if (university === null && isInitialSetup) return;
-  if (university === null) return;
+  const isEditingExisting = !!(current.course && current.university);
+  document.getElementById("course-setup-title").textContent = isInitialSetup ? "Set Up Your Tracker" : "Edit Course Setup";
+  document.getElementById("course-setup-copy").textContent = isInitialSetup
+    ? "Tell me a little about you and your course so the tracker starts off personalised from the first screen."
+    : "Update your name, course details, and yearly targets here.";
+  document.getElementById("setup-name-input").value = current.name || "";
+  document.getElementById("setup-university-input").value = current.university || "";
+  document.getElementById("setup-course-input").value = current.course || "";
+  document.getElementById("setup-start-year-input").value = current.startYear || new Date().getFullYear();
+  document.getElementById("setup-credits-input").value = current.creditsTarget || 120;
+  document.getElementById("setup-template-block").classList.toggle("hidden", !isInitialSetup);
+  document.getElementById("course-setup-cancel").classList.toggle("hidden", isInitialSetup);
+  document.getElementById("course-setup-close").classList.toggle("hidden", isInitialSetup);
+  if (isInitialSetup) {
+    const hasModules = !!getCurrentYear()?.store?.modules?.length;
+    selectSetupTemplate(hasModules ? "aero" : "blank");
+  } else {
+    selectSetupTemplate("blank");
+  }
+  document.getElementById("course-setup-modal").classList.remove("hidden");
+  if (!isEditingExisting && isInitialSetup) {
+    document.getElementById("setup-name-input").focus();
+  }
+}
 
-  const course = prompt("Course name:", current.course || "Your Course");
-  if (course === null && isInitialSetup) return;
-  if (course === null) return;
+function closeCourseSetupModal() {
+  if (courseSetupInitial) return;
+  document.getElementById("course-setup-modal").classList.add("hidden");
+}
 
-  const startYear = parseInt(prompt("Academic start year:", String(current.startYear || new Date().getFullYear())) || "", 10);
-  const creditsTarget = parseFloat(prompt("Target credits for this year:", String(current.creditsTarget || 120)) || "");
+function editCourseProfile() {
+  openCourseSetupModal(false);
+}
+
+function saveCourseSetup() {
+  const name = document.getElementById("setup-name-input").value.trim();
+  const universityInput = document.getElementById("setup-university-input").value.trim();
+  const courseInput = document.getElementById("setup-course-input").value.trim();
+  const startYearInput = parseInt(document.getElementById("setup-start-year-input").value, 10);
+  const creditsInput = parseFloat(document.getElementById("setup-credits-input").value);
+
+  const university = universityInput || (selectedSetupTemplate === "aero" ? "University of Sheffield" : "University");
+  const course = courseInput || (selectedSetupTemplate === "aero" ? "Aerospace Engineering" : "Course");
 
   state.profile = {
-    university: university.trim() || "University",
-    course: course.trim() || "Course",
-    startYear: Number.isFinite(startYear) ? startYear : new Date().getFullYear(),
-    creditsTarget: Number.isFinite(creditsTarget) ? creditsTarget : 120
+    name,
+    university,
+    course,
+    startYear: Number.isFinite(startYearInput) ? startYearInput : new Date().getFullYear(),
+    creditsTarget: Number.isFinite(creditsInput) ? creditsInput : 120
   };
+
+  if (courseSetupInitial) {
+    const currentYear = getCurrentYear();
+    currentYear.store = createYearStore(selectedSetupTemplate === "aero" ? BASE_MODULES : []);
+    if (!state.setup) state.setup = {};
+    state.setup.templateChoiceMade = true;
+  }
 
   save();
   refreshActiveYear();
   renderYearSelector();
+  buildModules();
+  renderStickyExams();
   updateGlobal();
+  document.getElementById("course-setup-modal").classList.add("hidden");
+  courseSetupInitial = false;
 }
 
 setupCourseIfNeeded();
 
 function shouldShowTemplateSplash() {
+  const profile = state.profile || deepClone(defaultProfile);
+  if (!profile.course || !profile.university) return false;
   if (state.setup?.templateChoiceMade) return false;
   const currentYear = getCurrentYear();
   return !!currentYear && currentYear.store.modules.length === 0;
@@ -2357,15 +2800,24 @@ function applyPreferences() {
   const themeSelect = document.getElementById("pref-theme");
   const densitySelect = document.getElementById("pref-density");
   const fontSelect = document.getElementById("pref-font");
+  const bodyBgInput = document.getElementById("body-bg-url");
   const hero = document.querySelector(".hero");
   const allBackgrounds = { ...HERO_BACKGROUNDS, ...(preferences.customBackgrounds || {}) };
 
   if (hero && allBackgrounds[preferences.hero]) {
     hero.style.setProperty("--hero-bg", `url("${allBackgrounds[preferences.hero]}")`);
   }
+  if (preferences.bodyBackground) {
+    document.body.classList.add("has-body-background");
+    document.body.style.setProperty("--page-bg", `url("${preferences.bodyBackground}")`);
+  } else {
+    document.body.classList.remove("has-body-background");
+    document.body.style.removeProperty("--page-bg");
+  }
   if (themeSelect) themeSelect.value = preferences.theme;
   if (densitySelect) densitySelect.value = preferences.density;
   if (fontSelect) fontSelect.value = preferences.font || "japanese";
+  if (bodyBgInput) bodyBgInput.value = preferences.bodyBackground || "";
 
   renderBackgroundPicker();
 }
@@ -2396,6 +2848,29 @@ function addCustomBackground() {
 
   input.value = "";
   applyPreferences();
+}
+
+function setBodyBackground() {
+  const input = document.getElementById("body-bg-url");
+  if (!input) return;
+  const raw = input.value.trim();
+  preferences.bodyBackground = raw ? safeUrl(raw) : "";
+  localStorage.setItem(PREFS_KEY, JSON.stringify(preferences));
+  applyPreferences();
+}
+
+function clearModuleMarks(mi, event) {
+  if (event) event.stopPropagation();
+  const store = getStore();
+  const mod = MODULES[mi];
+  if (!mod) return;
+  if (!confirm(`Clear coursework and exam marks for ${mod.kanji || mod.name}?`)) return;
+  delete store.coursework[mi];
+  delete store.exams[mi];
+  if (store.courseworkComponents) delete store.courseworkComponents[mi];
+  save();
+  buildModules();
+  updateGlobal();
 }
 
 function togglePreferences() {
@@ -2557,16 +3032,185 @@ function safeUrl(url) {
   return "https://" + trimmed.replace(/^\/+/, "");
 }
 
+function parseDeadlineInput(input) {
+  const raw = String(input || "").trim();
+  const match = raw.match(/^(\d{1,2})[\/\-. ](\d{1,2})[\/\-. ](\d{4})(?:[ ,]+(\d{1,2}):(\d{2}))?$/);
+  if (!match) return null;
+  const day = Number(match[1]);
+  const month = Number(match[2]);
+  const year = Number(match[3]);
+  const hours = Number(match[4] ?? 0);
+  const minutes = Number(match[5] ?? 0);
+  const date = new Date(year, month - 1, day, hours, minutes);
+  if (
+    Number.isNaN(date.getTime()) ||
+    date.getFullYear() !== year ||
+    date.getMonth() !== month - 1 ||
+    date.getDate() !== day ||
+    hours > 23 ||
+    minutes > 59
+  ) return null;
+  return date;
+}
+
+function toDeadlineStorageString(date) {
+  const yyyy = date.getFullYear();
+  const mm = String(date.getMonth() + 1).padStart(2, "0");
+  const dd = String(date.getDate()).padStart(2, "0");
+  const hh = String(date.getHours()).padStart(2, "0");
+  const min = String(date.getMinutes()).padStart(2, "0");
+  return `${yyyy}-${mm}-${dd}T${hh}:${min}`;
+}
+
+function openLinkForm(type, mi) {
+  const modal = document.getElementById("link-form-modal");
+  const title = document.getElementById("link-form-title");
+  const subtitle = document.getElementById("link-form-subtitle");
+  const nameField = document.getElementById("link-name-field");
+  const nameInput = document.getElementById("link-name-input");
+  const urlInput = document.getElementById("link-url-input");
+  const saveBtn = document.getElementById("link-form-save");
+  if (!modal || !MODULES[mi]) return;
+
+  modal.dataset.type = type;
+  modal.dataset.mi = String(mi);
+  nameInput.value = "";
+  urlInput.value = "";
+
+  if (type === "blackboard") {
+    subtitle.textContent = MODULES[mi].short || MODULES[mi].kanji || "Module";
+    title.textContent = "Set Blackboard Link";
+    nameField.style.display = "none";
+    urlInput.value = getBlackboardLink(mi) || "";
+    urlInput.placeholder = "Paste Blackboard link";
+    saveBtn.textContent = "Save Blackboard";
+  } else if (type === "formula") {
+    subtitle.textContent = MODULES[mi].short || MODULES[mi].kanji || "Module";
+    title.textContent = "Add Reference Sheet";
+    nameField.style.display = "block";
+    nameInput.placeholder = `${MODULES[mi].short || "Module"} Reference Sheet`;
+    urlInput.placeholder = "Paste reference sheet URL";
+    saveBtn.textContent = "Save Reference Sheet";
+  } else {
+    subtitle.textContent = MODULES[mi].short || MODULES[mi].kanji || "Module";
+    title.textContent = "Add Relevant Link";
+    nameField.style.display = "block";
+    nameInput.placeholder = "Useful resource";
+    urlInput.placeholder = "Paste link URL";
+    saveBtn.textContent = "Save Link";
+  }
+
+  modal.classList.remove("hidden");
+  setTimeout(() => (type === "blackboard" ? urlInput : nameInput).focus(), 0);
+}
+
+function closeLinkForm() {
+  const modal = document.getElementById("link-form-modal");
+  if (modal) modal.classList.add("hidden");
+}
+
+function saveLinkForm() {
+  const modal = document.getElementById("link-form-modal");
+  const type = modal.dataset.type;
+  const mi = parseInt(modal.dataset.mi, 10);
+  const name = document.getElementById("link-name-input").value.trim();
+  const rawUrl = document.getElementById("link-url-input").value.trim();
+  const store = getStore();
+
+  if (!MODULES[mi]) return;
+
+  if (type === "blackboard") {
+    if (rawUrl) store.blackboard[mi] = safeUrl(rawUrl);
+    else delete store.blackboard[mi];
+    save();
+    updateBlackboardButton(mi);
+    closeLinkForm();
+    return;
+  }
+
+  if (!name) {
+    alert("Please enter a link name.");
+    return;
+  }
+  if (!rawUrl) {
+    alert("Please enter a URL.");
+    return;
+  }
+
+  if (type === "formula") {
+    const items = getFormulaLinks(mi).slice();
+    items.push({ name, url: safeUrl(rawUrl) });
+    store.formulas[mi] = items;
+    save();
+    updateFormulaButton(mi);
+  } else if (type === "relevant") {
+    if (!store.relevantLinks) store.relevantLinks = {};
+    const items = getRelevantLinks(mi).slice();
+    items.push({ name, url: safeUrl(rawUrl) });
+    store.relevantLinks[mi] = items;
+    save();
+    renderRelevantLinks(mi);
+  }
+
+  closeLinkForm();
+}
+
+function openModuleForm() {
+  const modal = document.getElementById("module-form-modal");
+  if (!modal) return;
+  document.getElementById("module-code-input").value = "";
+  document.getElementById("module-name-input").value = "";
+  document.getElementById("module-short-input").value = "";
+  document.getElementById("module-credits-input").value = "15";
+  document.getElementById("module-cw-input").value = "50";
+  document.getElementById("module-exam-input").value = "50";
+  modal.classList.remove("hidden");
+  setTimeout(() => document.getElementById("module-name-input").focus(), 0);
+}
+
+function closeModuleForm() {
+  const modal = document.getElementById("module-form-modal");
+  if (modal) modal.classList.add("hidden");
+}
+
+function saveModuleForm() {
+  const name = document.getElementById("module-name-input").value.trim();
+  const code = document.getElementById("module-code-input").value.trim();
+  const shortName = document.getElementById("module-short-input").value.trim();
+  const credits = parseFloat(document.getElementById("module-credits-input").value || "");
+  const courseworkWeight = parseFloat(document.getElementById("module-cw-input").value || "");
+  const examWeightRaw = document.getElementById("module-exam-input").value;
+  const examWeight = parseFloat(examWeightRaw || "");
+
+  if (!name) {
+    alert("Please enter a module name.");
+    return;
+  }
+
+  const finalCode = code || `NEW${MODULES.length + 1}`;
+  const finalCw = Number.isFinite(courseworkWeight) ? Math.max(0, Math.min(100, courseworkWeight)) : 50;
+  const finalExam = Number.isFinite(examWeight) ? Math.max(0, Math.min(100, examWeight)) : Math.max(0, 100 - finalCw);
+
+  MODULES.push({
+    name,
+    kanji: finalCode.toUpperCase(),
+    short: shortName || finalCode.toUpperCase(),
+    credits: Number.isFinite(credits) ? credits : 15,
+    cw: finalCw,
+    exam: finalExam,
+    topics: []
+  });
+
+  save();
+  refreshActiveYear();
+  buildModules();
+  updateGlobal();
+  closeModuleForm();
+}
+
 function setBlackboardLink(mi, event) {
   if (event) event.stopPropagation();
-  const current = getBlackboardLink(mi);
-  const url = prompt("Enter Blackboard link for this module (leave blank to remove):", current || "");
-  if (url === null) return;
-  const clean = safeUrl(url);
-  const store = getStore();
-  if (url.trim()) store.blackboard[mi] = clean; else delete store.blackboard[mi];
-  save();
-  updateBlackboardButton(mi);
+  openLinkForm("blackboard", mi);
 }
 
 function openBlackboardLink(mi, event) {
@@ -2587,15 +3231,7 @@ function updateBlackboardButton(mi) {
 
 function setFormulaLink(mi, event) {
   if (event) event.stopPropagation();
-  const name = prompt("Formula sheet name:", MODULES[mi].short + " Formula Sheet");
-  if (name === null || !name.trim()) return;
-  const url = prompt("Enter URL for formula sheet:");
-  if (url === null || !url.trim()) return;
-  const items = getFormulaLinks(mi).slice();
-  items.push({ name: name.trim(), url: safeUrl(url) });
-  getStore().formulas[mi] = items;
-  save();
-  updateFormulaButton(mi);
+  openLinkForm("formula", mi);
 }
 
 function deleteFormulaLink(mi, index, event) {
@@ -2629,7 +3265,7 @@ function renderFormulaLinks(mi) {
   if (!host) return;
   const items = getFormulaLinks(mi);
   if (!items.length) {
-    host.innerHTML = '<div class="formula-empty">No formula sheets added yet.</div>';
+    host.innerHTML = '<div class="formula-empty">No reference sheets added yet.</div>';
     return;
   }
   host.innerHTML = items.map((item, index) => `
@@ -2642,17 +3278,7 @@ function renderFormulaLinks(mi) {
 
 function addRelevantLink(mi, event) {
   if (event) event.stopPropagation();
-  const name = prompt("Link name:", "Useful resource");
-  if (name === null || !name.trim()) return;
-  const url = prompt("Link URL:");
-  if (url === null || !url.trim()) return;
-  const store = getStore();
-  if (!store.relevantLinks) store.relevantLinks = {};
-  const items = getRelevantLinks(mi).slice();
-  items.push({ name: name.trim(), url: safeUrl(url) });
-  store.relevantLinks[mi] = items;
-  save();
-  renderRelevantLinks(mi);
+  openLinkForm("relevant", mi);
 }
 
 function deleteRelevantLink(mi, index, event) {
@@ -2688,7 +3314,7 @@ function updateFormulaButton(mi) {
   if (btn) {
     const count = getFormulaLinks(mi).length;
     const compact = document.body.classList.contains("compact-ui");
-    btn.textContent = compact ? "Fx" : (count ? `Docs (${count})` : "Docs");
+    btn.textContent = compact ? "Refs" : (count ? `Reference Sheets (${count})` : "Reference Sheets");
     btn.style.opacity = count ? "1" : "0.55";
   }
   renderFormulaLinks(mi);
@@ -2817,6 +3443,39 @@ document.getElementById("timeline-modal").addEventListener("click", (event) => {
   if (event.target.id === "timeline-modal") closeDeadlineTimeline();
 });
 
+document.getElementById("deadline-form-modal").addEventListener("click", (event) => {
+  if (event.target.id === "deadline-form-modal") closeDeadlineForm();
+});
+
+document.getElementById("module-form-modal").addEventListener("click", (event) => {
+  if (event.target.id === "module-form-modal") closeModuleForm();
+});
+
+document.getElementById("link-form-modal").addEventListener("click", (event) => {
+  if (event.target.id === "link-form-modal") closeLinkForm();
+});
+
+const moduleCwInput = document.getElementById("module-cw-input");
+if (moduleCwInput) {
+  moduleCwInput.addEventListener("input", () => {
+    const cw = parseFloat(moduleCwInput.value || "");
+    const examInput = document.getElementById("module-exam-input");
+    if (Number.isFinite(cw) && examInput && !examInput.dataset.userEdited) {
+      examInput.value = String(Math.max(0, Math.min(100, 100 - cw)));
+    }
+  });
+}
+const moduleExamInput = document.getElementById("module-exam-input");
+if (moduleExamInput) {
+  moduleExamInput.addEventListener("input", () => {
+    moduleExamInput.dataset.userEdited = "true";
+  });
+}
+
+document.getElementById("course-setup-modal").addEventListener("click", (event) => {
+  if (event.target.id === "course-setup-modal") closeCourseSetupModal();
+});
+
 function renderDashboardChart() {
   const canvas = document.getElementById("dashboard-chart");
   if (!canvas) return;
@@ -2900,13 +3559,14 @@ function renderDashboardChart() {
 
 function formatCountdown(dateString) {
   const target = new Date(dateString);
-  const diff = Math.max(0, target.getTime() - Date.now());
-  const totalSeconds = Math.floor(diff / 1000);
+  const diff = target.getTime() - Date.now();
+  const sign = diff < 0 ? "-" : "";
+  const totalSeconds = Math.floor(Math.abs(diff) / 1000);
   const days = Math.floor(totalSeconds / 86400);
   const hours = Math.floor((totalSeconds % 86400) / 3600);
   const minutes = Math.floor((totalSeconds % 3600) / 60);
   const seconds = totalSeconds % 60;
-  return `${days}d ${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
+  return `${sign}${days}d ${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
 }
 
 function renderYearSelector() {
@@ -2929,11 +3589,14 @@ function renderYearSelector() {
   const profileStartYear = parseInt(profile.startYear, 10);
   const startYear = (Number.isFinite(profileStartYear) ? profileStartYear : new Date().getFullYear()) + (yearNumber - 1);
   const endYear = startYear + 1;
+  const userName = (profile.name || "").trim();
   const university = profile.university || "University";
   const course = profile.course || "Course";
 
   const eyebrow = document.getElementById("hero-eyebrow");
-  if (eyebrow) eyebrow.textContent = `${university} · ${currentYear.label} · ${startYear}-${String(endYear).slice(2)}`;
+  if (eyebrow) eyebrow.textContent = userName
+    ? `${userName} · ${university} · ${currentYear.label} · ${startYear}-${String(endYear).slice(2)}`
+    : `${university} · ${currentYear.label} · ${startYear}-${String(endYear).slice(2)}`;
 
   const title = document.getElementById("hero-title");
   if (title) title.textContent = `Y${yearNumber} ${course}`;
@@ -3012,27 +3675,7 @@ function archiveCurrentYear() {
 }
 
 function addModuleToCurrentYear() {
-  const code = prompt("Module code:", "NEW201");
-  if (code === null || !code.trim()) return;
-  const name = prompt("Module name:", "New Module");
-  if (name === null || !name.trim()) return;
-  const shortName = prompt("Short label for charts/buttons:", code.trim());
-  const credits = parseFloat(prompt("Credits:", "15") || "");
-  const courseworkWeight = parseFloat(prompt("Coursework weighting %:", "50") || "");
-  const examWeight = parseFloat(prompt("Exam weighting %:", String(Number.isFinite(courseworkWeight) ? 100 - courseworkWeight : 50)) || "");
-  MODULES.push({
-    name: name.trim(),
-    kanji: code.trim().toUpperCase(),
-    short: (shortName || code).trim(),
-    credits: Number.isFinite(credits) ? credits : 15,
-    cw: Number.isFinite(courseworkWeight) ? courseworkWeight : 50,
-    exam: Number.isFinite(examWeight) ? examWeight : 50,
-    topics: []
-  });
-  save();
-  refreshActiveYear();
-  buildModules();
-  updateGlobal();
+  openModuleForm();
 }
 
 function shiftIndexedObjectAfterDelete(object, deletedIndex) {
@@ -3179,10 +3822,10 @@ function updateCourseworkSummary(mi) {
 
 function addTopicToModule(mi, event) {
   if (event) event.stopPropagation();
-
-  const input = prompt(
-    'Add topic(s).\n\nSingle topic: Aerodynamics intro\nMultiple topics: "Topic 1" "Topic 2" "Topic 3"'
-  );
+  const draftInput = document.getElementById(`topic-add-${mi}`);
+  const input = draftInput
+    ? draftInput.value
+    : prompt('Add topic(s).\n\nSingle topic: Aerodynamics intro\nMultiple topics: "Topic 1" "Topic 2" "Topic 3"');
 
   if (!input || !input.trim()) return;
 
@@ -3195,6 +3838,7 @@ function addTopicToModule(mi, event) {
     : [input.trim()];
 
   MODULES[mi].topics.push(...topicsToAdd);
+  if (draftInput) draftInput.value = "";
 
   save();
   buildModules();
@@ -3244,28 +3888,77 @@ function editTopicInModule(mi, ti, event) {
   updateGlobal();
 }
 
+function remapTopicStateForReorder(mi, fromIndex, toIndex) {
+  const store = getStore();
+  const topicCount = MODULES[mi].topics.length;
+  const checked = [];
+  for (let i = 0; i < topicCount; i++) checked.push(!!store.topics[topicKey(mi, i)]);
+  const [moved] = checked.splice(fromIndex, 1);
+  checked.splice(toIndex, 0, moved);
+  Object.keys(store.topics).forEach((key) => {
+    if (key.startsWith(`t_${mi}_`)) delete store.topics[key];
+  });
+  checked.forEach((value, index) => {
+    if (value) store.topics[topicKey(mi, index)] = true;
+  });
+}
+
+function moveTopicInModule(mi, fromIndex, toIndex) {
+  const topics = MODULES[mi]?.topics;
+  if (!topics || fromIndex === toIndex || fromIndex < 0 || toIndex < 0 || fromIndex >= topics.length || toIndex >= topics.length) return;
+  const [moved] = topics.splice(fromIndex, 1);
+  topics.splice(toIndex, 0, moved);
+  remapTopicStateForReorder(mi, fromIndex, toIndex);
+  save();
+  buildModules();
+  updateGlobal();
+}
+
+function startTopicReorder(mi, ti, event) {
+  draggedTopic = { mi, ti };
+  event.dataTransfer.effectAllowed = "move";
+  event.dataTransfer.setData("text/plain", `${mi}:${ti}`);
+}
+
+function allowTopicDrop(mi, ti, event) {
+  if (!draggedTopic || draggedTopic.mi !== mi || draggedTopic.ti === ti) return;
+  event.preventDefault();
+  event.currentTarget.classList.add("reordering");
+}
+
+function clearTopicDropState(event) {
+  event.currentTarget.classList.remove("reordering");
+}
+
+function dropTopicReorder(mi, ti, event) {
+  event.preventDefault();
+  event.currentTarget.classList.remove("reordering");
+  if (!draggedTopic || draggedTopic.mi !== mi) return;
+  moveTopicInModule(mi, draggedTopic.ti, ti);
+  draggedTopic = null;
+}
+
+function endTopicReorder() {
+  draggedTopic = null;
+  document.querySelectorAll(".topic-row.reordering").forEach((row) => row.classList.remove("reordering"));
+}
+
 function renderStickyExams() {
   const host = document.getElementById("live-exam-bar");
   if (!host) return;
   const store = getStore();
   const now = Date.now();
   const upcoming = store.customExams
-    .filter((exam) => new Date(exam.date).getTime() >= now - 60000)
     .sort((a, b) => new Date(a.date) - new Date(b.date));
-  const changed = JSON.stringify(upcoming) !== JSON.stringify(store.customExams);
-  if (changed) {
-    store.customExams = upcoming;
-    save();
-  }
   host.innerHTML = "";
   upcoming.forEach((exam, index) => {
     const target = new Date(exam.date);
-    const days = Math.floor((target.getTime() - now) / 86400000);
+    const isUrgent = target.getTime() <= now;
     const card = document.createElement("div");
     card.className = "exam-ticker";
     card.innerHTML = `
       <div class="ticker-mod">${escapeHtml(exam.mod)}</div>
-      <div class="ticker-time ${days <= 3 ? "urgent" : ""}">${formatCountdown(exam.date)}</div>
+      <div class="ticker-time ${isUrgent ? "urgent" : ""}">${formatCountdown(exam.date)}</div>
       <div class="ticker-date">${target.toLocaleString([], { dateStyle: "medium", timeStyle: "short" })}</div>
     `;
     card.addEventListener("contextmenu", (event) => {
@@ -3284,23 +3977,53 @@ function renderStickyExams() {
 }
 
 function addExam() {
-  const mod = prompt("Module shortname (e.g. Materials):");
-  if (!mod) return;
-  const date = prompt("Exam date and time (YYYY-MM-DDTHH:MM), e.g. 2026-05-15T09:00:");
-  if (!date || Number.isNaN(new Date(date).getTime())) {
-    if (date) alert("Invalid date format.");
+  openDeadlineForm();
+}
+
+function openDeadlineForm() {
+  document.getElementById("deadline-form-modal").classList.remove("hidden");
+}
+
+function closeDeadlineForm() {
+  document.getElementById("deadline-form-modal").classList.add("hidden");
+}
+
+function saveDeadlineForm() {
+  const titleInput = document.getElementById("deadline-title-input");
+  const dateInput = document.getElementById("deadline-date-input");
+  const timeInput = document.getElementById("deadline-time-input");
+  const noteInput = document.getElementById("deadline-note-input");
+  const mod = titleInput.value.trim();
+  const date = dateInput.value;
+  const time = timeInput.value || "09:00";
+  if (!mod) {
+    alert("Please enter a deadline title.");
     return;
   }
-  getStore().customExams.push({ mod: mod.trim(), date, note: "" });
+  if (!date) {
+    alert("Please choose a date.");
+    return;
+  }
+  const parsed = new Date(`${date}T${time}`);
+  if (Number.isNaN(parsed.getTime())) {
+    alert("Please enter a valid date and time.");
+    return;
+  }
+  getStore().customExams.push({ mod, date: toDeadlineStorageString(parsed), note: noteInput.value || "" });
   save();
   renderStickyExams();
   renderDeadlineTimeline();
+  titleInput.value = "";
+  dateInput.value = "";
+  timeInput.value = "";
+  noteInput.value = "";
+  closeDeadlineForm();
 }
 
 function removeExam(index) {
   const store = getStore();
   if (!store.customExams[index]) return;
-  if (!confirm(`Remove ${store.customExams[index].mod} exam?`)) return;
+  if (!confirm(`Remove ${store.customExams[index].mod} deadline?`)) return;
   store.customExams.splice(index, 1);
   save();
   renderStickyExams();
@@ -3374,18 +4097,18 @@ function renderDeadlineTimeline() {
 
   host.innerHTML = exams.map((exam, index) => {
     const target = new Date(exam.date);
-    const days = Math.floor((target.getTime() - now) / 86400000);
+    const isUrgent = target.getTime() <= now;
     return `
       <div class="timeline-item">
         <div class="timeline-rail"><div class="timeline-dot"></div></div>
         <div class="timeline-card">
           <div class="timeline-title">${escapeHtml(exam.mod)}</div>
           <div class="timeline-meta">
-            <span class="timeline-badge countdown ${days <= 3 ? "urgent" : ""}">${escapeHtml(formatCountdown(exam.date))}</span>
+            <span class="timeline-badge countdown ${isUrgent ? "urgent" : ""}" data-deadline-countdown="${escapeHtml(exam.date)}">${escapeHtml(formatCountdown(exam.date))}</span>
             <span class="timeline-badge">${escapeHtml(target.toLocaleString([], { dateStyle: "full", timeStyle: "short" }))}</span>
           </div>
           <div class="timeline-notes-label">Notes</div>
-          <textarea class="timeline-notes" placeholder="Add context, room, prep checklist, what to bring..." oninput="updateDeadlineNote(${index}, this.value)">${escapeHtml(exam.note || "")}</textarea>
+          <textarea class="timeline-notes" data-deadline-note-index="${index}" placeholder="Add context, room, prep checklist, what to bring...">${escapeHtml(exam.note || "")}</textarea>
           <div class="timeline-actions">
             <button class="mini-btn module-delete-btn" type="button" onclick="removeExam(${index})" title="Delete deadline" aria-label="Delete deadline">x</button>
           </div>
@@ -3393,6 +4116,12 @@ function renderDeadlineTimeline() {
       </div>
     `;
   }).join("");
+
+  host.querySelectorAll("[data-deadline-note-index]").forEach((textarea) => {
+    textarea.addEventListener("input", (event) => {
+      updateDeadlineNote(Number(event.target.dataset.deadlineNoteIndex), event.target.value);
+    });
+  });
 }
 
 function updateDeadlineNote(index, value) {
@@ -3406,7 +4135,15 @@ function openDeadlineTimeline() {
   document.getElementById("timeline-modal").classList.remove("hidden");
   renderDeadlineTimeline();
   if (deadlineTimelineInterval) clearInterval(deadlineTimelineInterval);
-  deadlineTimelineInterval = setInterval(renderDeadlineTimeline, 1000);
+  deadlineTimelineInterval = setInterval(updateDeadlineCountdowns, 1000);
+}
+
+function updateDeadlineCountdowns() {
+  document.querySelectorAll("[data-deadline-countdown]").forEach((node) => {
+    const date = node.dataset.deadlineCountdown;
+    node.textContent = formatCountdown(date);
+    node.classList.toggle("urgent", new Date(date).getTime() <= Date.now());
+  });
 }
 
 function closeDeadlineTimeline() {
@@ -3425,6 +4162,14 @@ function buildModules() {
     const wrap = document.createElement("div");
     wrap.className = `module b${mi}`;
 
+    const moduleDeleteButton = document.createElement("button");
+    moduleDeleteButton.className = "mini-btn module-delete-btn module-delete-corner";
+    moduleDeleteButton.type = "button";
+    moduleDeleteButton.textContent = "x";
+    moduleDeleteButton.title = "Delete module";
+    moduleDeleteButton.setAttribute("aria-label", "Delete module");
+    moduleDeleteButton.addEventListener("click", (event) => deleteModuleFromCurrentYear(mi, event));
+
     const header = document.createElement("div");
     header.className = "module-header";
     header.innerHTML = `
@@ -3434,7 +4179,7 @@ function buildModules() {
         <div class="mod-kanji">${escapeHtml(mod.kanji)}</div>
         <div class="module-links">
           <button class="bb-link" id="bb-link-${mi}" type="button" onclick="openBlackboardLink(${mi}, event)">Set Blackboard</button>
-          <button class="formula-btn" id="formula-btn-${mi}" type="button" onclick="openFormulaLink(${mi}, event)">Docs</button>
+          <button class="formula-btn" id="formula-btn-${mi}" type="button" onclick="openFormulaLink(${mi}, event)">Reference Sheets</button>
         </div>
       </div>
       <div class="progress-section">
@@ -3459,9 +4204,7 @@ function buildModules() {
         <div class="final-mark" id="mfinal-${mi}">-</div>
         <div id="mcls-${mi}" class="final-cls"></div>
       </div>
-      <div class="module-actions">
-        <button class="mini-btn module-delete-btn" type="button" onclick="deleteModuleFromCurrentYear(${mi}, event)" title="Delete module" aria-label="Delete module">x</button>
-      </div>
+      <div class="module-actions"></div>
       <div class="chevron" id="chev-${mi}">&#9654;</div>
     `;
 
@@ -3474,6 +4217,7 @@ function buildModules() {
       <button class="bb-edit-btn" type="button" onclick="editModuleTitle(${mi}, event)">Edit Title</button>
       <button class="bb-edit-btn" type="button" onclick="editModuleCode(${mi}, event)">Edit Code</button>
       <button class="bb-edit-btn" type="button" onclick="setBlackboardLink(${mi}, event)">Edit Blackboard Link</button>
+      <button class="bb-edit-btn" type="button" onclick="clearModuleMarks(${mi}, event)">Clear Marks</button>
     `;
     list.appendChild(moduleEditTools);
 
@@ -3570,8 +4314,8 @@ function buildModules() {
     formulaWrap.className = "formula-links-wrap";
     formulaWrap.innerHTML = `
       <div class="formula-links-head">
-        <div class="formula-links-title">Formula Sheets</div>
-        <button class="formula-edit-btn" type="button" onclick="setFormulaLink(${mi}, event)">Add Formula</button>
+        <div class="formula-links-title">Reference Sheets</div>
+        <button class="formula-edit-btn" type="button" onclick="setFormulaLink(${mi}, event)">Add Sheet</button>
       </div>
       <div class="formula-links-list" id="formula-links-${mi}"></div>
     `;
@@ -3582,10 +4326,22 @@ function buildModules() {
     topicTools.innerHTML = `
       <div class="topic-tools">
         <div class="topic-tools-title">Topics</div>
+      </div>
+      <div class="topic-entry-row">
+        <input class="input" id="topic-add-${mi}" placeholder='Add one topic, or "Topic 1" "Topic 2"'>
         <button class="mini-btn" type="button" onclick="addTopicToModule(${mi}, event)">Add Topic</button>
       </div>
+      <div class="topic-entry-help">Use quotes if you want to add several topics in one go.</div>
     `;
     list.appendChild(topicTools);
+    const topicAddInput = topicTools.querySelector(`#topic-add-${mi}`);
+    if (topicAddInput) {
+      topicAddInput.addEventListener("keydown", (event) => {
+        if (event.key !== "Enter") return;
+        event.preventDefault();
+        addTopicToModule(mi, event);
+      });
+    }
 
     mod.topics.forEach((topic, ti) => {
       const row = document.createElement("div");
@@ -3617,6 +4373,27 @@ function buildModules() {
         if (!isDraggingTopics) return;
         setTopicCheckbox(checkbox, mi, ti, dragTopicValue);
       });
+      row.addEventListener("click", (event) => {
+        if (event.target.closest("button") || event.target.closest("input")) return;
+        setTopicCheckbox(checkbox, mi, ti, !checkbox.checked);
+      });
+      row.addEventListener("dragover", (event) => allowTopicDrop(mi, ti, event));
+      row.addEventListener("dragleave", clearTopicDropState);
+      row.addEventListener("drop", (event) => dropTopicReorder(mi, ti, event));
+      const dragHandle = document.createElement("button");
+      dragHandle.type = "button";
+      dragHandle.className = "topic-drag-handle";
+      dragHandle.textContent = ":::";
+      dragHandle.title = "Drag to reorder";
+      dragHandle.draggable = true;
+      dragHandle.addEventListener("dragstart", (event) => {
+        row.classList.add("reordering");
+        startTopicReorder(mi, ti, event);
+      });
+      dragHandle.addEventListener("dragend", () => {
+        row.classList.remove("reordering");
+        endTopicReorder();
+      });
       const deleteButton = document.createElement("button");
       const editButton = document.createElement("button");
       editButton.type = "button";
@@ -3627,6 +4404,7 @@ function buildModules() {
       deleteButton.className = "topic-delete-btn";
       deleteButton.textContent = "Delete";
       deleteButton.addEventListener("click", (event) => deleteTopicFromModule(mi, ti, event));
+      row.appendChild(dragHandle);
       main.appendChild(checkbox);
       main.appendChild(label);
       row.appendChild(main);
@@ -3635,12 +4413,20 @@ function buildModules() {
       list.appendChild(row);
     });
 
+    if (openModules.has(mi)) {
+      list.classList.add("open");
+      header.querySelector(`#chev-${mi}`)?.classList?.add("open");
+    }
+
     header.addEventListener("click", (event) => {
       if (event.target.closest("button") || event.target.closest("input") || event.target.closest("textarea") || event.target.closest("a")) return;
       const open = list.classList.toggle("open");
       document.getElementById(`chev-${mi}`).classList.toggle("open", open);
+      if (open) openModules.add(mi);
+      else openModules.delete(mi);
     });
 
+    wrap.appendChild(moduleDeleteButton);
     wrap.appendChild(header);
     wrap.appendChild(list);
     container.appendChild(wrap);
