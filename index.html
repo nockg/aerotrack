@@ -1315,6 +1315,67 @@ body.theme-dark-offwhite .b6::before {
   .module-header { padding: 14px; gap: 12px; }
   .topic-row, .notes-area-wrap, .formula-links-wrap { padding-left: 28px; padding-right: 14px; }
 }
+@media (max-width: 700px) {
+  body { padding-top: 150px; }
+
+  .sticky-exams {
+    height: 56px;
+    padding: 0 8px;
+  }
+
+  .exam-ticker {
+    min-width: 190px;
+    padding: 0 14px;
+  }
+
+  .ticker-time { font-size: 14px; }
+
+  .nav-bar {
+    top: 56px;
+    padding: 8px;
+    gap: 6px;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+
+  .nav-btn,
+  .nav-select {
+    font-size: 9px;
+    padding: 6px 9px;
+    flex-shrink: 0;
+  }
+
+  h1 { font-size: 34px; }
+
+  .hero-grid { grid-template-columns: 1fr; }
+
+  .module-header {
+    grid-template-columns: 10px 1fr;
+    gap: 10px;
+    padding: 14px;
+  }
+
+  .module-header > *:not(.mod-stripe) {
+    grid-column: 2;
+  }
+
+  .inputs-grid { grid-template-columns: 1fr; }
+
+  .prefs-panel {
+    top: 70px;
+    left: 12px;
+    right: 12px;
+    width: auto;
+    max-height: 80vh;
+    overflow-y: auto;
+  }
+
+  .dashboard-content {
+    width: calc(100vw - 24px);
+    max-height: 86vh;
+    padding: 18px;
+  }
+}
 </style>
 </head>
 <body>
