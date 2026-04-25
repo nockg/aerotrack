@@ -40,7 +40,7 @@ body {
   color: var(--ink);
   font-family: "Cormorant Garamond", serif;
   min-height: 100vh;
-  padding-top: 116px;
+  padding-top: 126px;
 }
 body.has-body-background::before {
   content: "";
@@ -319,7 +319,6 @@ body.font-mono .deadline-splash-title {
   display: flex;
   gap: 12px;
   align-items: center;
-  margin-bottom: 0;
 }
 .prefs-toggle-btn {
   margin-left: auto;
@@ -385,10 +384,9 @@ body.font-mono .deadline-splash-title {
   padding: 44px 32px 38px;
   position: relative;
   overflow: hidden;
-  margin-top: -10;
+  margin-top: -10px;
   padding-top: 54px;
 }
-
 .hero::before {
   content: "";
   position: absolute;
@@ -1985,6 +1983,37 @@ body.theme-dark-offwhite .b6::before {
     grid-template-columns: 1fr;
   }
 }
+
+
+/* Coherent deadline timeline typography */
+.timeline-page-title {
+  font-family: "Shippori Mincho", serif;
+  font-size: 26px;
+  line-height: 1.1;
+}
+.timeline-title {
+  font-size: 22px;
+  line-height: 1.15;
+  margin-bottom: 8px;
+}
+.timeline-card {
+  padding: 16px;
+}
+.timeline-badge.countdown {
+  font-size: 16px;
+  padding: 8px 10px;
+}
+.timeline-badge {
+  font-size: 10px;
+  padding: 6px 9px;
+}
+.coursework-form-help {
+  font-family: "Cormorant Garamond", serif;
+  font-size: 14px;
+  color: var(--muted);
+  line-height: 1.45;
+}
+
 </style>
 </head>
 <body>
@@ -2172,7 +2201,7 @@ body.theme-dark-offwhite .b6::before {
   <div class="dashboard-content deadline-form-content">
     <button class="dashboard-close" onclick="closeDeadlineForm()">X</button>
     <div class="timeline-subtitle">Deadlines</div>
-    <div class="dashboard-title">Add Deadline</div>
+    <div class="dashboard-title" id="deadline-form-title">Add Deadline</div>
     <div class="deadline-form-grid">
       <div class="field">
         <label for="deadline-title-input">Deadline Title</label>
@@ -2194,73 +2223,71 @@ body.theme-dark-offwhite .b6::before {
       </div>
       <div class="deadline-form-actions">
         <button class="nav-btn" type="button" onclick="closeDeadlineForm()">Cancel</button>
-        <button class="nav-btn" type="button" onclick="saveDeadlineForm()">Save Deadline</button>
+        <button class="nav-btn" type="button" onclick="saveDeadlineForm()" id="deadline-save-btn">Save Deadline</button>
       </div>
     </div>
   </div>
 </div>
 
+<div id="coursework-component-modal" class="dashboard-modal hidden">
+  <div class="dashboard-content deadline-form-content">
+    <button class="dashboard-close" onclick="closeCourseworkComponentForm()">X</button>
+    <div class="timeline-subtitle">Coursework Calculator</div>
+    <div class="dashboard-title">Add Coursework Component</div>
+    <div class="deadline-form-grid">
+      <div class="field">
+        <label for="cw-component-name-input">Component Name</label>
+        <input class="input" id="cw-component-name-input" placeholder='"Lab 1" "Quiz" "Project"'>
+      </div>
+      <div class="deadline-form-row">
+        <div class="field">
+          <label for="cw-component-mark-input">Mark %</label>
+          <input class="input" id="cw-component-mark-input" type="number" min="0" max="100" step="0.1" placeholder="Optional">
+        </div>
+        <div class="field">
+          <label for="cw-component-weight-input">Weight %</label>
+          <input class="input" id="cw-component-weight-input" type="number" min="0" max="100" step="0.1" placeholder="Auto">
+        </div>
+      </div>
+      <div class="coursework-form-help">
+        Add one component, or split multiple names with quotes. If no weight is entered, blank weights are auto-split across the remaining coursework weight.
+      </div>
+      <div class="deadline-form-actions">
+        <button class="nav-btn" type="button" onclick="closeCourseworkComponentForm()">Cancel</button>
+        <button class="nav-btn" type="button" onclick="saveCourseworkComponentForm()">Add Component</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 <div id="module-form-modal" class="dashboard-modal hidden">
   <div class="dashboard-content deadline-form-content">
-    <button class="dashboard-close" type="button" onclick="closeModuleForm()">X</button>
+    <button class="dashboard-close" onclick="closeModuleForm()">X</button>
     <div class="timeline-subtitle">Modules</div>
     <div class="dashboard-title">Add Module</div>
     <div class="deadline-form-grid">
-      <div class="field">
-        <label for="module-name-input">Module Name</label>
-        <input class="input" id="module-name-input" placeholder="Aerospace Structures">
-      </div>
+      <div class="field"><label for="module-code-input">Module Code</label><input class="input" id="module-code-input" placeholder="NEW201"></div>
+      <div class="field"><label for="module-name-input">Module Name</label><input class="input" id="module-name-input" placeholder="New Module"></div>
+      <div class="field"><label for="module-short-input">Short Label</label><input class="input" id="module-short-input" placeholder="Charts/buttons label"></div>
       <div class="deadline-form-row">
-        <div class="field">
-          <label for="module-code-input">Module Code</label>
-          <input class="input" id="module-code-input" placeholder="NEW201">
-        </div>
-        <div class="field">
-          <label for="module-short-input">Short Label</label>
-          <input class="input" id="module-short-input" placeholder="Structures">
-        </div>
+        <div class="field"><label for="module-credits-input">Credits</label><input class="input" id="module-credits-input" type="number" min="0" step="1" value="15"></div>
+        <div class="field"><label for="module-cw-input">Coursework %</label><input class="input" id="module-cw-input" type="number" min="0" max="100" step="0.1" value="50"></div>
       </div>
-      <div class="deadline-form-row">
-        <div class="field">
-          <label for="module-credits-input">Credits</label>
-          <input class="input" id="module-credits-input" type="number" min="0" step="0.5" placeholder="15">
-        </div>
-        <div class="field">
-          <label for="module-cw-input">Coursework Weight %</label>
-          <input class="input" id="module-cw-input" type="number" min="0" max="100" step="0.1" placeholder="50">
-        </div>
-      </div>
-      <div class="field">
-        <label for="module-exam-input">Exam Weight %</label>
-        <input class="input" id="module-exam-input" type="number" min="0" max="100" step="0.1" placeholder="50">
-      </div>
-      <div class="deadline-form-actions">
-        <button class="nav-btn" type="button" onclick="closeModuleForm()">Cancel</button>
-        <button class="nav-btn" type="button" onclick="saveModuleForm()">Save Module</button>
-      </div>
+      <div class="field"><label for="module-exam-input">Exam %</label><input class="input" id="module-exam-input" type="number" min="0" max="100" step="0.1" value="50"></div>
+      <div class="deadline-form-actions"><button class="nav-btn" type="button" onclick="closeModuleForm()">Cancel</button><button class="nav-btn" type="button" onclick="saveModuleForm()">Add Module</button></div>
     </div>
   </div>
 </div>
 
 <div id="link-form-modal" class="dashboard-modal hidden">
   <div class="dashboard-content deadline-form-content">
-    <button class="dashboard-close" type="button" onclick="closeLinkForm()">X</button>
+    <button class="dashboard-close" onclick="closeLinkForm()">X</button>
     <div class="timeline-subtitle" id="link-form-subtitle">Links</div>
     <div class="dashboard-title" id="link-form-title">Add Link</div>
     <div class="deadline-form-grid">
-      <div class="field" id="link-name-field">
-        <label for="link-name-input" id="link-name-label">Link Name</label>
-        <input class="input" id="link-name-input" placeholder="Reference Sheet">
-      </div>
-      <div class="field">
-        <label for="link-url-input" id="link-url-label">URL</label>
-        <input class="input" id="link-url-input" placeholder="https://...">
-      </div>
-      <div class="deadline-form-actions">
-        <button class="nav-btn" type="button" onclick="closeLinkForm()">Cancel</button>
-        <button class="nav-btn" type="button" onclick="saveLinkForm()" id="link-form-save">Save Link</button>
-      </div>
+      <div class="field" id="link-name-field"><label for="link-name-input">Name</label><input class="input" id="link-name-input" placeholder="Reference Sheet"></div>
+      <div class="field"><label for="link-url-input">URL</label><input class="input" id="link-url-input" placeholder="https://..."></div>
+      <div class="deadline-form-actions"><button class="nav-btn" type="button" onclick="closeLinkForm()">Cancel</button><button class="nav-btn" type="button" onclick="saveLinkForm()" id="link-save-btn">Save Link</button></div>
     </div>
   </div>
 </div>
@@ -2353,6 +2380,9 @@ const HERO_BACKGROUNDS = {
 
 let deadlineSplashInterval = null;
 let deadlineTimelineInterval = null;
+let editingDeadlineIndex = null;
+let courseworkFormModuleIndex = null;
+let linkFormContext = null;
 let isDraggingTopics = false;
 let dragTopicValue = null;
 let draggedTopic = null;
@@ -3062,155 +3092,85 @@ function toDeadlineStorageString(date) {
   return `${yyyy}-${mm}-${dd}T${hh}:${min}`;
 }
 
-function openLinkForm(type, mi) {
+function setBlackboardLink(mi, event) {
+  if (event) event.stopPropagation();
+  openLinkForm({ type: "blackboard", mi });
+}
+
+function openLinkForm(context) {
+  linkFormContext = context;
   const modal = document.getElementById("link-form-modal");
-  const title = document.getElementById("link-form-title");
   const subtitle = document.getElementById("link-form-subtitle");
+  const title = document.getElementById("link-form-title");
   const nameField = document.getElementById("link-name-field");
   const nameInput = document.getElementById("link-name-input");
   const urlInput = document.getElementById("link-url-input");
-  const saveBtn = document.getElementById("link-form-save");
-  if (!modal || !MODULES[mi]) return;
 
-  modal.dataset.type = type;
-  modal.dataset.mi = String(mi);
   nameInput.value = "";
   urlInput.value = "";
+  nameField.style.display = "block";
 
-  if (type === "blackboard") {
-    subtitle.textContent = MODULES[mi].short || MODULES[mi].kanji || "Module";
+  if (context.type === "blackboard") {
+    subtitle.textContent = "Blackboard";
     title.textContent = "Set Blackboard Link";
     nameField.style.display = "none";
-    urlInput.value = getBlackboardLink(mi) || "";
-    urlInput.placeholder = "Paste Blackboard link";
-    saveBtn.textContent = "Save Blackboard";
-  } else if (type === "formula") {
-    subtitle.textContent = MODULES[mi].short || MODULES[mi].kanji || "Module";
+    urlInput.value = getBlackboardLink(context.mi) || "";
+  } else if (context.type === "formula") {
+    subtitle.textContent = "Reference Sheets";
     title.textContent = "Add Reference Sheet";
-    nameField.style.display = "block";
-    nameInput.placeholder = `${MODULES[mi].short || "Module"} Reference Sheet`;
-    urlInput.placeholder = "Paste reference sheet URL";
-    saveBtn.textContent = "Save Reference Sheet";
+    nameInput.value = MODULES[context.mi].short + " Reference Sheet";
   } else {
-    subtitle.textContent = MODULES[mi].short || MODULES[mi].kanji || "Module";
+    subtitle.textContent = "Relevant Links";
     title.textContent = "Add Relevant Link";
-    nameField.style.display = "block";
-    nameInput.placeholder = "Useful resource";
-    urlInput.placeholder = "Paste link URL";
-    saveBtn.textContent = "Save Link";
+    nameInput.value = "Useful resource";
   }
 
   modal.classList.remove("hidden");
-  setTimeout(() => (type === "blackboard" ? urlInput : nameInput).focus(), 0);
+  setTimeout(() => (nameField.style.display === "none" ? urlInput : nameInput).focus(), 0);
 }
 
 function closeLinkForm() {
-  const modal = document.getElementById("link-form-modal");
-  if (modal) modal.classList.add("hidden");
+  document.getElementById("link-form-modal").classList.add("hidden");
+  linkFormContext = null;
 }
 
 function saveLinkForm() {
-  const modal = document.getElementById("link-form-modal");
-  const type = modal.dataset.type;
-  const mi = parseInt(modal.dataset.mi, 10);
-  const name = document.getElementById("link-name-input").value.trim();
-  const rawUrl = document.getElementById("link-url-input").value.trim();
+  if (!linkFormContext) return;
+  const nameInput = document.getElementById("link-name-input");
+  const urlInput = document.getElementById("link-url-input");
+  const url = (urlInput.value || "").trim();
   const store = getStore();
 
-  if (!MODULES[mi]) return;
-
-  if (type === "blackboard") {
-    if (rawUrl) store.blackboard[mi] = safeUrl(rawUrl);
-    else delete store.blackboard[mi];
+  if (linkFormContext.type === "blackboard") {
+    if (url) store.blackboard[linkFormContext.mi] = safeUrl(url);
+    else delete store.blackboard[linkFormContext.mi];
     save();
-    updateBlackboardButton(mi);
+    updateBlackboardButton(linkFormContext.mi);
     closeLinkForm();
     return;
   }
 
-  if (!name) {
-    alert("Please enter a link name.");
-    return;
-  }
-  if (!rawUrl) {
-    alert("Please enter a URL.");
+  const name = (nameInput.value || "").trim();
+  if (!name || !url) {
+    alert("Please enter both a name and a URL.");
     return;
   }
 
-  if (type === "formula") {
-    const items = getFormulaLinks(mi).slice();
-    items.push({ name, url: safeUrl(rawUrl) });
-    store.formulas[mi] = items;
+  if (linkFormContext.type === "formula") {
+    const items = getFormulaLinks(linkFormContext.mi).slice();
+    items.push({ name, url: safeUrl(url) });
+    store.formulas[linkFormContext.mi] = items;
     save();
-    updateFormulaButton(mi);
-  } else if (type === "relevant") {
+    updateFormulaButton(linkFormContext.mi);
+  } else if (linkFormContext.type === "relevant") {
     if (!store.relevantLinks) store.relevantLinks = {};
-    const items = getRelevantLinks(mi).slice();
-    items.push({ name, url: safeUrl(rawUrl) });
-    store.relevantLinks[mi] = items;
+    const items = getRelevantLinks(linkFormContext.mi).slice();
+    items.push({ name, url: safeUrl(url) });
+    store.relevantLinks[linkFormContext.mi] = items;
     save();
-    renderRelevantLinks(mi);
+    renderRelevantLinks(linkFormContext.mi);
   }
-
   closeLinkForm();
-}
-
-function openModuleForm() {
-  const modal = document.getElementById("module-form-modal");
-  if (!modal) return;
-  document.getElementById("module-code-input").value = "";
-  document.getElementById("module-name-input").value = "";
-  document.getElementById("module-short-input").value = "";
-  document.getElementById("module-credits-input").value = "15";
-  document.getElementById("module-cw-input").value = "50";
-  document.getElementById("module-exam-input").value = "50";
-  modal.classList.remove("hidden");
-  setTimeout(() => document.getElementById("module-name-input").focus(), 0);
-}
-
-function closeModuleForm() {
-  const modal = document.getElementById("module-form-modal");
-  if (modal) modal.classList.add("hidden");
-}
-
-function saveModuleForm() {
-  const name = document.getElementById("module-name-input").value.trim();
-  const code = document.getElementById("module-code-input").value.trim();
-  const shortName = document.getElementById("module-short-input").value.trim();
-  const credits = parseFloat(document.getElementById("module-credits-input").value || "");
-  const courseworkWeight = parseFloat(document.getElementById("module-cw-input").value || "");
-  const examWeightRaw = document.getElementById("module-exam-input").value;
-  const examWeight = parseFloat(examWeightRaw || "");
-
-  if (!name) {
-    alert("Please enter a module name.");
-    return;
-  }
-
-  const finalCode = code || `NEW${MODULES.length + 1}`;
-  const finalCw = Number.isFinite(courseworkWeight) ? Math.max(0, Math.min(100, courseworkWeight)) : 50;
-  const finalExam = Number.isFinite(examWeight) ? Math.max(0, Math.min(100, examWeight)) : Math.max(0, 100 - finalCw);
-
-  MODULES.push({
-    name,
-    kanji: finalCode.toUpperCase(),
-    short: shortName || finalCode.toUpperCase(),
-    credits: Number.isFinite(credits) ? credits : 15,
-    cw: finalCw,
-    exam: finalExam,
-    topics: []
-  });
-
-  save();
-  refreshActiveYear();
-  buildModules();
-  updateGlobal();
-  closeModuleForm();
-}
-
-function setBlackboardLink(mi, event) {
-  if (event) event.stopPropagation();
-  openLinkForm("blackboard", mi);
 }
 
 function openBlackboardLink(mi, event) {
@@ -3231,7 +3191,7 @@ function updateBlackboardButton(mi) {
 
 function setFormulaLink(mi, event) {
   if (event) event.stopPropagation();
-  openLinkForm("formula", mi);
+  openLinkForm({ type: "formula", mi });
 }
 
 function deleteFormulaLink(mi, index, event) {
@@ -3278,7 +3238,7 @@ function renderFormulaLinks(mi) {
 
 function addRelevantLink(mi, event) {
   if (event) event.stopPropagation();
-  openLinkForm("relevant", mi);
+  openLinkForm({ type: "relevant", mi });
 }
 
 function deleteRelevantLink(mi, index, event) {
@@ -3446,31 +3406,6 @@ document.getElementById("timeline-modal").addEventListener("click", (event) => {
 document.getElementById("deadline-form-modal").addEventListener("click", (event) => {
   if (event.target.id === "deadline-form-modal") closeDeadlineForm();
 });
-
-document.getElementById("module-form-modal").addEventListener("click", (event) => {
-  if (event.target.id === "module-form-modal") closeModuleForm();
-});
-
-document.getElementById("link-form-modal").addEventListener("click", (event) => {
-  if (event.target.id === "link-form-modal") closeLinkForm();
-});
-
-const moduleCwInput = document.getElementById("module-cw-input");
-if (moduleCwInput) {
-  moduleCwInput.addEventListener("input", () => {
-    const cw = parseFloat(moduleCwInput.value || "");
-    const examInput = document.getElementById("module-exam-input");
-    if (Number.isFinite(cw) && examInput && !examInput.dataset.userEdited) {
-      examInput.value = String(Math.max(0, Math.min(100, 100 - cw)));
-    }
-  });
-}
-const moduleExamInput = document.getElementById("module-exam-input");
-if (moduleExamInput) {
-  moduleExamInput.addEventListener("input", () => {
-    moduleExamInput.dataset.userEdited = "true";
-  });
-}
 
 document.getElementById("course-setup-modal").addEventListener("click", (event) => {
   if (event.target.id === "course-setup-modal") closeCourseSetupModal();
@@ -3675,7 +3610,56 @@ function archiveCurrentYear() {
 }
 
 function addModuleToCurrentYear() {
-  openModuleForm();
+  const code = document.getElementById("module-code-input");
+  const name = document.getElementById("module-name-input");
+  const shortName = document.getElementById("module-short-input");
+  const credits = document.getElementById("module-credits-input");
+  const cw = document.getElementById("module-cw-input");
+  const exam = document.getElementById("module-exam-input");
+  if (code) code.value = "NEW201";
+  if (name) name.value = "New Module";
+  if (shortName) shortName.value = "";
+  if (credits) credits.value = "15";
+  if (cw) cw.value = "50";
+  if (exam) exam.value = "50";
+  document.getElementById("module-form-modal").classList.remove("hidden");
+  setTimeout(() => code && code.focus(), 0);
+}
+
+function closeModuleForm() {
+  document.getElementById("module-form-modal").classList.add("hidden");
+}
+
+function saveModuleForm() {
+  const codeInput = document.getElementById("module-code-input");
+  const nameInput = document.getElementById("module-name-input");
+  const shortInput = document.getElementById("module-short-input");
+  const creditsInput = document.getElementById("module-credits-input");
+  const cwInput = document.getElementById("module-cw-input");
+  const examInput = document.getElementById("module-exam-input");
+  const code = (codeInput.value || "").trim();
+  const name = (nameInput.value || "").trim();
+  if (!code || !name) {
+    alert("Please enter both module code and module name.");
+    return;
+  }
+  const credits = parseFloat(creditsInput.value || "");
+  const courseworkWeight = parseFloat(cwInput.value || "");
+  const examWeight = parseFloat(examInput.value || "");
+  MODULES.push({
+    name,
+    kanji: code.toUpperCase(),
+    short: (shortInput.value || code).trim(),
+    credits: Number.isFinite(credits) ? credits : 15,
+    cw: Number.isFinite(courseworkWeight) ? courseworkWeight : 50,
+    exam: Number.isFinite(examWeight) ? examWeight : 50,
+    topics: []
+  });
+  save();
+  refreshActiveYear();
+  buildModules();
+  updateGlobal();
+  closeModuleForm();
 }
 
 function shiftIndexedObjectAfterDelete(object, deletedIndex) {
@@ -3758,27 +3742,56 @@ function editModuleCode(mi, event) {
 
 function addCourseworkComponent(mi, event) {
   if (event) event.stopPropagation();
+  courseworkFormModuleIndex = mi;
+  const nameInput = document.getElementById("cw-component-name-input");
+  const markInput = document.getElementById("cw-component-mark-input");
+  const weightInput = document.getElementById("cw-component-weight-input");
+  if (nameInput) nameInput.value = "";
+  if (markInput) markInput.value = "";
+  if (weightInput) weightInput.value = "";
+  document.getElementById("coursework-component-modal").classList.remove("hidden");
+  setTimeout(() => nameInput && nameInput.focus(), 0);
+}
 
-  const input = prompt(
-    'Add coursework component(s).\n\nSingle component: Lab Report\nMultiple components: "Lab Report" "Quiz" "Project"'
-  );
+function closeCourseworkComponentForm() {
+  document.getElementById("coursework-component-modal").classList.add("hidden");
+  courseworkFormModuleIndex = null;
+}
 
-  if (!input || !input.trim()) return;
+function saveCourseworkComponentForm() {
+  const mi = courseworkFormModuleIndex;
+  if (mi === null || mi === undefined || !MODULES[mi]) return;
+  const nameInput = document.getElementById("cw-component-name-input");
+  const markInput = document.getElementById("cw-component-mark-input");
+  const weightInput = document.getElementById("cw-component-weight-input");
+  const input = (nameInput?.value || "").trim();
+  if (!input) {
+    alert("Please enter a coursework component name.");
+    return;
+  }
 
   const quotedComponents = [...input.matchAll(/"([^"]+)"/g)]
     .map(match => match[1].trim())
     .filter(Boolean);
 
-  const namesToAdd = quotedComponents.length
-    ? quotedComponents
-    : [input.trim()];
-
+  const namesToAdd = quotedComponents.length ? quotedComponents : [input];
+  const mark = markInput?.value || "";
+  const weight = weightInput?.value || "";
   const components = getCourseworkComponents(mi);
-  namesToAdd.forEach((name) => components.push({ name, mark: "", weight: "" }));
+
+  namesToAdd.forEach((name) => {
+    components.push({ name, mark, weight });
+  });
+
+  const calculated = calculateCourseworkFromComponents(mi);
+  if (calculated.mark !== null) {
+    getStore().coursework[mi] = calculated.mark.toFixed(1);
+  }
 
   save();
   buildModules();
   updateGlobal();
+  closeCourseworkComponentForm();
 }
 
 function deleteCourseworkComponent(mi, ci, event) {
@@ -3795,6 +3808,14 @@ function updateCourseworkComponent(mi, ci, field, value) {
   const components = getCourseworkComponents(mi);
   if (!components[ci]) return;
   components[ci][field] = value;
+  const calculated = calculateCourseworkFromComponents(mi);
+  if (calculated.mark !== null) {
+    getStore().coursework[mi] = calculated.mark.toFixed(1);
+    const cwInput = document.getElementById(`cw-${mi}`);
+    const compactCw = document.querySelector(`#topics-${mi} .compact-cw`);
+    if (cwInput) cwInput.value = calculated.mark.toFixed(1);
+    if (compactCw) compactCw.value = calculated.mark.toFixed(1);
+  }
   save();
   updateModule(mi);
   updateGlobal();
@@ -3977,15 +3998,47 @@ function renderStickyExams() {
 }
 
 function addExam() {
-  openDeadlineForm();
+  openDeadlineForm(null);
 }
 
-function openDeadlineForm() {
+function openDeadlineForm(index = null) {
+  editingDeadlineIndex = index;
+  const titleInput = document.getElementById("deadline-title-input");
+  const dateInput = document.getElementById("deadline-date-input");
+  const timeInput = document.getElementById("deadline-time-input");
+  const noteInput = document.getElementById("deadline-note-input");
+  const title = document.getElementById("deadline-form-title");
+  const saveBtn = document.getElementById("deadline-save-btn");
+  const deadline = index !== null ? getStore().customExams[index] : null;
+
+  if (deadline) {
+    const date = new Date(deadline.date);
+    titleInput.value = deadline.mod || "";
+    dateInput.value = Number.isNaN(date.getTime()) ? "" : date.toISOString().slice(0, 10);
+    timeInput.value = Number.isNaN(date.getTime()) ? "" : date.toTimeString().slice(0, 5);
+    noteInput.value = deadline.note || "";
+    if (title) title.textContent = "Edit Deadline";
+    if (saveBtn) saveBtn.textContent = "Save Changes";
+  } else {
+    titleInput.value = "";
+    dateInput.value = "";
+    timeInput.value = "";
+    noteInput.value = "";
+    if (title) title.textContent = "Add Deadline";
+    if (saveBtn) saveBtn.textContent = "Save Deadline";
+  }
+
   document.getElementById("deadline-form-modal").classList.remove("hidden");
+  setTimeout(() => titleInput && titleInput.focus(), 0);
+}
+
+function editDeadline(index) {
+  openDeadlineForm(index);
 }
 
 function closeDeadlineForm() {
   document.getElementById("deadline-form-modal").classList.add("hidden");
+  editingDeadlineIndex = null;
 }
 
 function saveDeadlineForm() {
@@ -4009,14 +4062,18 @@ function saveDeadlineForm() {
     alert("Please enter a valid date and time.");
     return;
   }
-  getStore().customExams.push({ mod, date: toDeadlineStorageString(parsed), note: noteInput.value || "" });
+
+  const deadlineData = { mod, date: toDeadlineStorageString(parsed), note: noteInput.value || "" };
+  const store = getStore();
+  if (editingDeadlineIndex !== null && store.customExams[editingDeadlineIndex]) {
+    store.customExams[editingDeadlineIndex] = deadlineData;
+  } else {
+    store.customExams.push(deadlineData);
+  }
+
   save();
   renderStickyExams();
   renderDeadlineTimeline();
-  titleInput.value = "";
-  dateInput.value = "";
-  timeInput.value = "";
-  noteInput.value = "";
   closeDeadlineForm();
 }
 
@@ -4087,7 +4144,7 @@ function renderDeadlineTimeline() {
   const store = getStore();
   const now = Date.now();
   const exams = (store.customExams || [])
-    .slice()
+    .map((exam, originalIndex) => ({ ...exam, originalIndex }))
     .sort((a, b) => new Date(a.date) - new Date(b.date));
 
   if (!exams.length) {
@@ -4095,7 +4152,7 @@ function renderDeadlineTimeline() {
     return;
   }
 
-  host.innerHTML = exams.map((exam, index) => {
+  host.innerHTML = exams.map((exam) => {
     const target = new Date(exam.date);
     const isUrgent = target.getTime() <= now;
     return `
@@ -4108,9 +4165,10 @@ function renderDeadlineTimeline() {
             <span class="timeline-badge">${escapeHtml(target.toLocaleString([], { dateStyle: "full", timeStyle: "short" }))}</span>
           </div>
           <div class="timeline-notes-label">Notes</div>
-          <textarea class="timeline-notes" data-deadline-note-index="${index}" placeholder="Add context, room, prep checklist, what to bring...">${escapeHtml(exam.note || "")}</textarea>
+          <textarea class="timeline-notes" data-deadline-note-index="${exam.originalIndex}" placeholder="Add context, room, prep checklist, what to bring...">${escapeHtml(exam.note || "")}</textarea>
           <div class="timeline-actions">
-            <button class="mini-btn module-delete-btn" type="button" onclick="removeExam(${index})" title="Delete deadline" aria-label="Delete deadline">x</button>
+            <button class="mini-btn" type="button" onclick="editDeadline(${exam.originalIndex})">Edit</button>
+            <button class="mini-btn module-delete-btn" type="button" onclick="removeExam(${exam.originalIndex})" title="Delete deadline" aria-label="Delete deadline">x</button>
           </div>
         </div>
       </div>
@@ -4210,6 +4268,7 @@ function buildModules() {
 
     const list = document.createElement("div");
     list.className = "topic-list";
+    list.id = `topics-${mi}`;
 
     const moduleEditTools = document.createElement("div");
     moduleEditTools.className = "module-edit-tools";
