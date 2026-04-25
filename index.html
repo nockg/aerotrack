@@ -1908,7 +1908,7 @@ function updateBlackboardButton(mi) {
   if (!btn) return;
   const hasLink = !!getBlackboardLink(mi);
   const compact = document.body.classList.contains("compact-ui");
-  if (compact) btn.textContent = hasLink ? "BB" : "Set";
+  if (compact) btn.textContent = hasLink ? "Blackboard" : "Set";
   else btn.textContent = hasLink ? "Launch Blackboard" : "Set Blackboard";
 }
 
