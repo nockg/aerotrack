@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Aerospace Engineering Year 1 Tracker</title>
+<title>Course Progress Tracker</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@200;300;400;500;700&family=Shippori+Mincho:wght@400;500;600;700;800&family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -40,6 +40,23 @@ body {
   padding-top: 126px;
 }
 
+body.font-sans,
+body.font-sans * {
+  font-family: "Segoe UI", Arial, sans-serif;
+}
+
+body.font-mono,
+body.font-mono * {
+  font-family: "DM Mono", Consolas, monospace;
+}
+
+body.font-mono h1,
+body.font-mono .mod-name,
+body.font-mono .dashboard-title,
+body.font-mono .deadline-splash-title {
+  letter-spacing: 0;
+}
+
 .deadline-splash {
   position: fixed;
   inset: 0;
@@ -56,6 +73,53 @@ body {
   display: none;
 }
 
+.template-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.template-choice {
+  border: 1px solid rgba(255,255,255,0.16);
+  border-radius: 8px;
+  padding: 14px;
+  cursor: pointer;
+  color: #fff;
+  background: rgba(255,255,255,0.08);
+  text-align: left;
+}
+
+.template-choice-title {
+  font-family: "DM Mono", monospace;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #f8ead5;
+  margin-bottom: 8px;
+}
+
+.template-choice-detail {
+  color: rgba(255,255,255,0.68);
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.template-choice.primary {
+  border-color: rgba(216,200,176,0.45);
+  background: rgba(216,200,176,0.18);
+}
+
+.template-choice:hover {
+  background: rgba(255,255,255,0.14);
+}
+
+.template-splash-copy {
+  color: rgba(255,255,255,0.68);
+  font-size: 16px;
+  line-height: 1.45;
+}
+
 .deadline-splash-card {
   width: min(420px, calc(100vw - 32px));
   padding: 26px 28px;
@@ -70,6 +134,10 @@ body {
 
   position: relative;
   overflow: hidden;
+}
+
+.template-splash-card {
+  width: min(640px, calc(100vw - 32px));
 }
 
 /* subtle accent line */
@@ -157,6 +225,12 @@ body {
   box-shadow: var(--shadow);
   overflow-x: auto;
   scrollbar-width: none;
+  cursor: grab;
+  user-select: none;
+  overscroll-behavior-x: contain;
+}
+.sticky-exams.dragging {
+  cursor: grabbing;
 }
 .sticky-exams::-webkit-scrollbar { display: none; }
 .exam-ticker {
@@ -222,6 +296,9 @@ body {
   display: flex;
   gap: 12px;
   align-items: center;
+}
+.prefs-toggle-btn {
+  margin-left: auto;
 }
 .year-controls {
   display: flex;
@@ -425,6 +502,9 @@ h1 {
   gap: 4px;
 }
 .dash-launch {
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
   transition: transform 0.28s ease, background 0.28s ease, border-color 0.28s ease;
 }
 
@@ -434,16 +514,31 @@ h1 {
   border-color: rgba(255,255,255,0.28);
 }
 
+.dash-launch::after {
+  content: "Open";
+  position: absolute;
+  right: 16px;
+  bottom: 14px;
+  font-family: "DM Mono", monospace;
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(245,240,232,0.55);
+}
+
 .dash-launch-icon {
   font-family: "Shippori Mincho", serif;
-  font-size: 32px;
+  font-size: 26px;
   color: #f5f0e8;
   line-height: 1;
+  max-width: 120px;
 }
 .dash-launch-copy {
   font-family: "Cormorant Garamond", serif;
-  font-size: 11px;
-  color: rgba(245,240,232,0.56);
+  font-size: 15px;
+  color: rgba(245,240,232,0.72);
+  line-height: 1.3;
+  margin-top: 6px;
 }
 .predictor-hero-number {
   font-family: "Shippori Mincho", serif;
@@ -527,6 +622,14 @@ h1 {
   display: flex;
   gap: 6px;
   flex-wrap: wrap;
+}
+.module-edit-tools {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 12px 20px 12px 42px;
+  border-bottom: 1px solid var(--border);
+  background: rgba(26,22,18,0.025);
 }
 .bb-link, .bb-edit-btn, .formula-btn, .formula-edit-btn, .mini-btn {
   background: rgba(26,22,18,0.04);
@@ -649,13 +752,30 @@ h1 {
   gap: 6px;
   align-items: center;
 }
+.module-delete-btn {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--vermillion);
+  border-color: rgba(192,57,43,0.45);
+  background: rgba(192,57,43,0.06);
+  font-size: 12px;
+  line-height: 1;
+}
+.module-delete-btn:hover {
+  background: rgba(192,57,43,0.14);
+}
 .topic-list {
   display: none;
   border-top: 1px solid var(--border);
   background: var(--paper2);
 }
 .topic-list.open { display: block; }
-.notes-area-wrap, .formula-links-wrap {
+.notes-area-wrap, .formula-links-wrap, .relevant-links-wrap {
   padding: 12px 20px 12px 42px;
   border-bottom: 1px solid var(--border);
 }
@@ -674,7 +794,7 @@ h1 {
   line-height: 1.6;
 }
 .notes-area::placeholder { color: var(--faint); }
-.formula-links-head {
+.formula-links-head, .relevant-links-head {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -695,19 +815,19 @@ h1 {
   color: var(--muted);
   text-transform: uppercase;
 }
-.formula-links-title {
+.formula-links-title, .relevant-links-title {
   font-family: "DM Mono", monospace;
   font-size: 10px;
   letter-spacing: 0.12em;
   color: var(--muted);
   text-transform: uppercase;
 }
-.formula-links-list {
+.formula-links-list, .relevant-links-list {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
 }
-.formula-chip {
+.formula-chip, .relevant-link-chip {
   display: inline-flex;
   align-items: center;
   gap: 6px;
@@ -716,14 +836,14 @@ h1 {
   padding: 5px 8px;
   border-radius: 2px;
 }
-.formula-chip a {
+.formula-chip a, .relevant-link-chip a {
   color: var(--slate);
   text-decoration: none;
   font-family: "DM Mono", monospace;
   font-size: 10px;
 }
-.formula-chip a:hover { color: var(--vermillion); }
-.formula-remove-btn {
+.formula-chip a:hover, .relevant-link-chip a:hover { color: var(--vermillion); }
+.formula-remove-btn, .relevant-link-remove-btn {
   border: none;
   background: none;
   color: var(--muted);
@@ -731,11 +851,70 @@ h1 {
   font-family: "DM Mono", monospace;
   font-size: 10px;
 }
-.formula-remove-btn:hover { color: var(--vermillion); }
-.formula-empty {
+.formula-remove-btn:hover, .relevant-link-remove-btn:hover { color: var(--vermillion); }
+.formula-empty, .relevant-links-empty {
   font-family: "Cormorant Garamond", serif;
   font-size: 14px;
   color: var(--muted);
+}
+
+.coursework-calc-wrap {
+  padding: 16px 20px 16px 42px;
+  border-bottom: 1px solid var(--border);
+  background: rgba(255,255,255,0.24);
+}
+.coursework-calc-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+.coursework-calc-title {
+  font-family: "Shippori Mincho", serif;
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: 0;
+  color: var(--ink);
+  text-transform: none;
+}
+.coursework-calc-summary {
+  font-family: "DM Mono", monospace;
+  font-size: 11px;
+  color: var(--muted);
+  margin-bottom: 12px;
+}
+.coursework-component-row {
+  display: grid;
+  grid-template-columns: minmax(160px, 1fr) 92px 92px auto;
+  gap: 8px;
+  align-items: end;
+  margin-bottom: 8px;
+}
+.coursework-component-row .field label {
+  margin-bottom: 4px;
+}
+.coursework-empty {
+  font-family: "Cormorant Garamond", serif;
+  font-size: 14px;
+  color: var(--muted);
+  line-height: 1.5;
+}
+.coursework-component-delete {
+  height: 32px;
+  align-self: end;
+}
+@media (max-width: 700px) {
+  .coursework-calc-wrap {
+    padding-left: 18px;
+    padding-right: 12px;
+  }
+  .coursework-component-row {
+    grid-template-columns: 1fr;
+  }
+  .coursework-component-delete {
+    width: fit-content;
+  }
 }
 .topic-row {
   display: flex;
@@ -804,15 +983,28 @@ h1 {
 }
 .topic-delete-btn:hover { color: var(--vermillion); }
 
+.topic-edit-btn {
+  border: none;
+  background: none;
+  color: var(--muted);
+  font-family: "DM Mono", monospace;
+  font-size: 10px;
+  cursor: pointer;
+  padding: 2px 4px;
+  text-transform: uppercase;
+}
+.topic-edit-btn:hover { color: var(--gold); }
+
 .prefs-panel {
   position: fixed;
   top: 120px;
-  right: 18px;
+  right: 0;
+  left: auto;
   z-index: 1200;
   width: min(320px, calc(100vw - 24px));
   background: var(--paper3);
   border: 1px solid var(--border2);
-  border-radius: 6px;
+  border-radius: 6px 0 0 6px;
   box-shadow: var(--shadow);
   padding: 16px;
 }
@@ -899,7 +1091,8 @@ body.compact-ui .module-header {
 }
 body.compact-ui .topic-row,
 body.compact-ui .notes-area-wrap,
-body.compact-ui .formula-links-wrap {
+body.compact-ui .formula-links-wrap,
+body.compact-ui .relevant-links-wrap {
   padding-top: 8px;
   padding-bottom: 8px;
 }
@@ -1271,6 +1464,185 @@ body.theme-dark-offwhite .b6::before {
 .cls-21 { background: rgba(212,160,23,0.14); border-color: var(--gold2); color: var(--gold); }
 .cls-22 { background: rgba(26,44,74,0.08); border-color: rgba(26,44,74,0.25); color: var(--indigo); }
 .cls-third { background: rgba(74,85,104,0.1); border-color: var(--border2); color: var(--slate); }
+
+.timeline-content {
+  width: min(860px, calc(100vw - 32px));
+}
+
+.timeline-head {
+  display: grid;
+  gap: 10px;
+  margin-bottom: 24px;
+  padding-right: 28px;
+}
+
+.timeline-subtitle {
+  font-family: "DM Mono", monospace;
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 8px;
+}
+
+.timeline-topline {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.timeline-page-title {
+  font-family: "Cormorant Garamond", serif;
+  font-size: 42px;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--ink);
+  margin: 0;
+}
+
+.timeline-list {
+  display: grid;
+  gap: 18px;
+}
+
+.timeline-empty {
+  background: var(--paper2);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 20px;
+  font-family: "Cormorant Garamond", serif;
+  font-size: 18px;
+  color: var(--muted);
+}
+
+.timeline-item {
+  display: grid;
+  grid-template-columns: 18px 1fr;
+  gap: 14px;
+  align-items: start;
+}
+
+.timeline-rail {
+  position: relative;
+  min-height: 100%;
+  padding-top: 8px;
+}
+
+.timeline-rail::before {
+  content: "";
+  position: absolute;
+  left: 8px;
+  top: 0;
+  bottom: -18px;
+  width: 1px;
+  background: rgba(26,22,18,0.12);
+}
+
+.timeline-item:last-child .timeline-rail::before {
+  bottom: 16px;
+}
+
+.timeline-dot {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 2px solid var(--gold2);
+  background: var(--paper);
+  position: relative;
+  z-index: 1;
+}
+
+.timeline-card {
+  background: var(--paper2);
+  border: 1px solid var(--border2);
+  border-left: 4px solid var(--gold2);
+  border-radius: 6px;
+  padding: 20px;
+  box-shadow: 0 8px 18px rgba(14,12,10,0.06);
+}
+
+.timeline-title {
+  font-family: "Shippori Mincho", serif;
+  font-size: 30px;
+  line-height: 1.1;
+  color: var(--ink);
+  margin-bottom: 6px;
+  font-weight: 800;
+}
+
+.timeline-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.timeline-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 8px 12px;
+  border-radius: 2px;
+  background: rgba(255,255,255,0.68);
+  border: 1px solid var(--border2);
+  font-family: "DM Mono", monospace;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+  text-transform: uppercase;
+}
+
+.timeline-badge.urgent {
+  color: var(--vermillion);
+  border-color: rgba(192,57,43,0.34);
+  background: rgba(192,57,43,0.12);
+}
+
+.timeline-badge.countdown {
+  background: var(--sumi);
+  color: #f5f0e8;
+  border-color: var(--sumi);
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  padding: 10px 14px;
+  text-transform: none;
+}
+
+.timeline-notes-label {
+  font-family: "DM Mono", monospace;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 6px;
+}
+
+.timeline-notes {
+  width: 100%;
+  min-height: 78px;
+  resize: vertical;
+  background: rgba(255,255,255,0.6);
+  border: 1px solid var(--border2);
+  border-radius: 4px;
+  padding: 10px 12px;
+  font-family: "Cormorant Garamond", serif;
+  font-size: 16px;
+  line-height: 1.45;
+  color: var(--ink);
+  outline: none;
+}
+
+.timeline-notes:focus {
+  border-color: var(--vermillion);
+}
+
+.timeline-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 10px;
+}
 .footer {
   text-align: center;
   padding: 40px 0;
@@ -1313,7 +1685,7 @@ body.theme-dark-offwhite .b6::before {
   .hero { padding: 36px 16px 34px; }
   .content { padding: 20px 12px 60px; }
   .module-header { padding: 14px; gap: 12px; }
-  .topic-row, .notes-area-wrap, .formula-links-wrap { padding-left: 28px; padding-right: 14px; }
+  .topic-row, .notes-area-wrap, .formula-links-wrap, .relevant-links-wrap { padding-left: 28px; padding-right: 14px; }
 }
 @media (max-width: 700px) {
   body { padding-top: 150px; }
@@ -1345,6 +1717,10 @@ body.theme-dark-offwhite .b6::before {
     flex-shrink: 0;
   }
 
+  .prefs-toggle-btn {
+    margin-left: 0;
+  }
+
   h1 { font-size: 34px; }
 
   .hero-grid { grid-template-columns: 1fr; }
@@ -1366,6 +1742,7 @@ body.theme-dark-offwhite .b6::before {
     left: 12px;
     right: 12px;
     width: auto;
+    border-radius: 6px;
     max-height: 80vh;
     overflow-y: auto;
   }
@@ -1375,6 +1752,10 @@ body.theme-dark-offwhite .b6::before {
     max-height: 86vh;
     padding: 18px;
   }
+
+  .template-actions {
+    grid-template-columns: 1fr;
+  }
 }
 </style>
 </head>
@@ -1382,10 +1763,31 @@ body.theme-dark-offwhite .b6::before {
 
 <div id="deadline-splash" class="deadline-splash hidden">
   <div class="deadline-splash-card">
-    <button class="deadline-splash-close" type="button" onclick="closeDeadlineSplash()">×</button>
+    <button class="deadline-splash-close" type="button" onclick="closeDeadlineSplash()">X</button>
     <div class="deadline-splash-label">Upcoming Deadline</div>
     <div id="deadline-splash-title" class="deadline-splash-title"></div>
     <div id="deadline-splash-time" class="deadline-splash-time"></div>
+  </div>
+</div>
+
+<div id="template-splash" class="deadline-splash hidden">
+  <div class="deadline-splash-card template-splash-card">
+    <button class="deadline-splash-close" type="button" onclick="dismissTemplateSplash()">X</button>
+    <div class="deadline-splash-label">Starter Template</div>
+    <div class="deadline-splash-title">Choose how to start</div>
+    <div class="template-splash-copy">
+      Pick a blank tracker for any course, or load the Year 1 Aerospace Engineering modules as a ready-made example. You can still edit or delete modules afterwards.
+    </div>
+    <div class="template-actions">
+      <button class="template-choice primary" type="button" onclick="loadAeroTemplate()">
+        <div class="template-choice-title">Y1 Aero Template</div>
+        <div class="template-choice-detail">Loads the Sheffield Year 1 Aerospace module list, credits, coursework/exam weights, and topic checklist.</div>
+      </button>
+      <button class="template-choice" type="button" onclick="dismissTemplateSplash()">
+        <div class="template-choice-title">Start Blank</div>
+        <div class="template-choice-detail">Creates an empty Year 1 tracker so you can add your own modules, weights, deadlines, and topics.</div>
+      </button>
+    </div>
   </div>
 </div>
 
@@ -1398,7 +1800,8 @@ body.theme-dark-offwhite .b6::before {
   <button class="nav-btn" onclick="document.getElementById('modules-start').scrollIntoView({ behavior: 'smooth' })">Jump to Modules</button>
   <button class="nav-btn calendar-btn" onclick="window.open('https://calendar.google.com/calendar/u/0/r','_blank','noopener')">Open Google Calendar</button>
   <button class="nav-btn" onclick="addModuleToCurrentYear()">Add Module</button>
-  <button class="nav-btn" onclick="togglePreferences()">Preferences</button>
+  <button class="nav-btn" onclick="openDeadlineTimeline()">Deadlines</button>
+  <button class="nav-btn prefs-toggle-btn" onclick="togglePreferences()">Preferences</button>
   <button class="nav-btn" onclick="openDashboard()">Dashboard</button>
 </div>
 
@@ -1421,6 +1824,14 @@ body.theme-dark-offwhite .b6::before {
         <option value="compact">Compact</option>
       </select>
     </div>
+    <div class="field">
+      <label for="pref-font">Font Style</label>
+      <select class="nav-select" id="pref-font" onchange="setPreference('font', this.value)">
+        <option value="japanese">Current Serif</option>
+        <option value="sans">Clean Sans</option>
+        <option value="mono">Mono Study</option>
+      </select>
+    </div>
     <div class="field custom-bg-field">
       <label for="custom-bg-url">Add Background URL</label>
       <input class="input" id="custom-bg-url" placeholder="Paste image link">
@@ -1435,6 +1846,9 @@ body.theme-dark-offwhite .b6::before {
     </div>
     <div class="field">
       <label>Storage</label>
+      <button class="nav-btn" type="button" onclick="editCourseProfile()">
+        Edit Course Setup
+      </button>
       <button class="nav-btn danger-btn" type="button" onclick="clearTrackerStorage()">
         Clear Saved Data
       </button>
@@ -1445,8 +1859,8 @@ body.theme-dark-offwhite .b6::before {
 <div class="hero">
   <div class="hero-accent"></div>
   <div class="hero-inner">
-    <div class="eyebrow" id="hero-eyebrow">University of Sheffield · Year 1 · 2025-26</div>
-    <h1 id="hero-title">Y1 Aerospace Engineering</h1>
+    <div class="eyebrow" id="hero-eyebrow">Course Tracker</div>
+    <h1 id="hero-title">Year Progress</h1>
     <div class="hero-grid">
       <div class="washi-card">
         <div class="card-label">Overall Progress</div>
@@ -1464,7 +1878,7 @@ body.theme-dark-offwhite .b6::before {
       <div class="washi-card dash-launch" onclick="openDashboard()">
         <div>
           <div class="dash-launch-icon">Dashboard</div>
-          <div class="dash-launch-copy">Analytics</div>
+          <div class="dash-launch-copy">Marks, progress, credits</div>
         </div>
       </div>
 
@@ -1481,7 +1895,7 @@ body.theme-dark-offwhite .b6::before {
 
 <div id="dashboard-modal" class="dashboard-modal hidden">
   <div class="dashboard-content">
-    <button class="dashboard-close" onclick="closeDashboard()">×</button>
+    <button class="dashboard-close" onclick="closeDashboard()">X</button>
     <div class="dashboard-title">Dashboard</div>
     <div class="dashboard-grid">
       <div class="dashboard-card">
@@ -1505,9 +1919,23 @@ body.theme-dark-offwhite .b6::before {
   </div>
 </div>
 
+<div id="timeline-modal" class="dashboard-modal hidden">
+  <div class="dashboard-content timeline-content">
+    <button class="dashboard-close" onclick="closeDeadlineTimeline()">X</button>
+    <div class="timeline-head">
+      <div class="timeline-subtitle">Deadlines</div>
+      <div class="timeline-topline">
+        <div class="timeline-page-title">Deadline Timeline</div>
+        <button class="nav-btn" type="button" onclick="addExam()">Add Deadline</button>
+      </div>
+    </div>
+    <div class="timeline-list" id="timeline-list"></div>
+  </div>
+</div>
+
 <div class="content" id="modules-start">
   <div id="modules"></div>
-  <div class="footer" id="footer-label">UoS Y1 · Progress Tracker</div>
+  <div class="footer" id="footer-label">Course Progress Tracker</div>
 </div>
 
 <script>
@@ -1542,6 +1970,7 @@ const HERO_BACKGROUNDS = {
 };
 
 let deadlineSplashInterval = null;
+let deadlineTimelineInterval = null;
 let isDraggingTopics = false;
 let dragTopicValue = null;
 
@@ -1630,7 +2059,7 @@ function renderBackgroundPicker() {
       </button>
 
       ${key.startsWith("custom_") ? `
-        <button class="bg-delete-btn" onclick="deleteCustomBackground('${key}')">×</button>
+        <button class="bg-delete-btn" onclick="deleteCustomBackground('${key}')">X</button>
       ` : ""}
     </div>
   `).join("");
@@ -1652,23 +2081,34 @@ function deleteCustomBackground(key) {
   applyPreferences();
 }
 
-const KEY = "uos_aero_tracker_v4";
-const PREFS_KEY = "uos_aero_prefs_v1";
+const KEY = "course_progress_tracker_v1";
+const PREFS_KEY = "course_progress_prefs_v1";
+const LEGACY_TRACKER_KEY = "uos_aero_tracker_v4";
+const LEGACY_PREFS_KEY = "uos_aero_prefs_v1";
 const LEGACY_STATE_KEYS = ["uos_aero_jp_v2", "uos_aero_jp_v1"];
 const LEGACY_BLACKBOARD_KEYS = ["uos_blackboard_links_v1"];
 const LEGACY_FORMULA_KEYS = ["uos_formula_links_v2", "uos_formula_links_v1"];
 const LEGACY_EXAM_KEYS = ["uos_exams_v2", "uos_exams_v1"];
 
+const defaultProfile = {
+  university: "",
+  course: "",
+  startYear: new Date().getFullYear(),
+  creditsTarget: 120
+};
+
 const defaultState = {
+  profile: deepClone(defaultProfile),
   years: {},
-  ui: { currentYearId: "year1" }
+  ui: { currentYearId: "year1" },
+  setup: { templateChoiceMade: false }
 };
 
 let MODULES = [];
 let TOTAL_CREDITS = 0;
 const preferences = Object.assign(
-  { theme: "light", density: "comfortable", hero: "bg1" },
-  loadJson(PREFS_KEY, {})
+  { theme: "light", density: "comfortable", font: "japanese", hero: "bg1" },
+  loadJson(PREFS_KEY, loadJson(LEGACY_PREFS_KEY, {}))
 );
 
 function deepClone(value) {
@@ -1692,15 +2132,35 @@ function firstExisting(keys, fallback) {
   return fallback;
 }
 
+function hasStoredKey(key) {
+  try {
+    return localStorage.getItem(key) !== null;
+  } catch (error) {
+    return false;
+  }
+}
+
+function createInitialState() {
+  const initial = deepClone(defaultState);
+  initial.years.year1 = {
+    id: "year1",
+    label: "Year 1",
+    store: createYearStore([])
+  };
+  return initial;
+}
+
 function createYearStore(modules) {
   return {
     modules: deepClone(modules),
     topics: {},
     coursework: {},
+    courseworkComponents: {},
     exams: {},
     notes: {},
     blackboard: {},
     formulas: {},
+    relevantLinks: {},
     customExams: [],
     archived: false
   };
@@ -1745,11 +2205,14 @@ function migrateLegacyState() {
 
 let state = loadJson(KEY, null);
 if (!state) {
-  state = migrateLegacyState();
+  state = createInitialState();
   localStorage.setItem(KEY, JSON.stringify(state));
 }
 
 function ensureYearsState() {
+  if (!state.profile) state.profile = deepClone(defaultProfile);
+  if (!state.setup) state.setup = { templateChoiceMade: false };
+
   if (state.years && Object.keys(state.years).length) {
     if (!state.ui) state.ui = {};
     if (!state.ui.currentYearId || !state.years[state.ui.currentYearId]) {
@@ -1762,14 +2225,18 @@ function ensureYearsState() {
     modules: deepClone(BASE_MODULES),
     topics: state.topics || {},
     coursework: state.coursework || {},
+    courseworkComponents: state.courseworkComponents || {},
     exams: state.exams || {},
     notes: state.notes || {},
     blackboard: state.blackboard || {},
     formulas: state.formulas || {},
+    relevantLinks: state.relevantLinks || {},
     customExams: state.customExams || [],
     archived: false
   };
   state = {
+    profile: state.profile || deepClone(defaultProfile),
+    setup: state.setup || { templateChoiceMade: false },
     years: {
       year1: {
         id: "year1",
@@ -1784,6 +2251,83 @@ function ensureYearsState() {
 
 ensureYearsState();
 
+function setupCourseIfNeeded() {
+  const profile = state.profile || deepClone(defaultProfile);
+  if (profile.course && profile.university) return;
+  editCourseProfile(true);
+}
+
+function editCourseProfile(isInitialSetup = false) {
+  const current = Object.assign({}, defaultProfile, state.profile || {});
+  const university = prompt("University / school name:", current.university || "Your University");
+  if (university === null && isInitialSetup) return;
+  if (university === null) return;
+
+  const course = prompt("Course name:", current.course || "Your Course");
+  if (course === null && isInitialSetup) return;
+  if (course === null) return;
+
+  const startYear = parseInt(prompt("Academic start year:", String(current.startYear || new Date().getFullYear())) || "", 10);
+  const creditsTarget = parseFloat(prompt("Target credits for this year:", String(current.creditsTarget || 120)) || "");
+
+  state.profile = {
+    university: university.trim() || "University",
+    course: course.trim() || "Course",
+    startYear: Number.isFinite(startYear) ? startYear : new Date().getFullYear(),
+    creditsTarget: Number.isFinite(creditsTarget) ? creditsTarget : 120
+  };
+
+  save();
+  refreshActiveYear();
+  renderYearSelector();
+  updateGlobal();
+}
+
+setupCourseIfNeeded();
+
+function shouldShowTemplateSplash() {
+  if (state.setup?.templateChoiceMade) return false;
+  const currentYear = getCurrentYear();
+  return !!currentYear && currentYear.store.modules.length === 0;
+}
+
+function showTemplateSplash() {
+  if (!shouldShowTemplateSplash()) return;
+  document.getElementById("template-splash").classList.remove("hidden");
+}
+
+function dismissTemplateSplash() {
+  if (!state.setup) state.setup = {};
+  state.setup.templateChoiceMade = true;
+  save();
+  document.getElementById("template-splash").classList.add("hidden");
+}
+
+function loadAeroTemplate() {
+  const currentYear = getCurrentYear();
+  if (!currentYear) return;
+  if (currentYear.store.modules.length) {
+    const replace = confirm("Replace the current year's modules with the Y1 Aerospace Engineering template?");
+    if (!replace) return;
+  }
+  currentYear.store = createYearStore(BASE_MODULES);
+  if (!state.profile.course || state.profile.course === "Course" || state.profile.course === "Your Course") {
+    state.profile.course = "Aerospace Engineering";
+  }
+  if (!state.profile.university || state.profile.university === "University") {
+    state.profile.university = "University of Sheffield";
+  }
+  if (!state.setup) state.setup = {};
+  state.setup.templateChoiceMade = true;
+  refreshActiveYear();
+  save();
+  document.getElementById("template-splash").classList.add("hidden");
+  renderYearSelector();
+  buildModules();
+  renderStickyExams();
+  updateGlobal();
+}
+
 function getCurrentYear() {
   return state.years[state.ui.currentYearId];
 }
@@ -1795,18 +2339,24 @@ function getStore() {
 function refreshActiveYear() {
   const currentYear = getCurrentYear();
   MODULES = currentYear.store.modules;
-  TOTAL_CREDITS = MODULES.reduce((sum, mod) => sum + mod.credits, 0);
+  const moduleCredits = MODULES.reduce((sum, mod) => sum + mod.credits, 0);
+  const targetCredits = parseFloat(state.profile?.creditsTarget);
+  TOTAL_CREDITS = Math.max(moduleCredits, Number.isFinite(targetCredits) ? targetCredits : 0);
 }
 
 refreshActiveYear();
 
 function applyPreferences() {
+  if (preferences.font === "classic") preferences.font = "mono";
   document.body.classList.toggle("theme-dark", preferences.theme === "dark");
   document.body.classList.toggle("theme-quiet", preferences.theme === "quiet");
   document.body.classList.toggle("theme-dark-offwhite", preferences.theme === "dark-offwhite");
   document.body.classList.toggle("compact-ui", preferences.density === "compact");
+  document.body.classList.toggle("font-sans", preferences.font === "sans");
+  document.body.classList.toggle("font-mono", preferences.font === "mono");
   const themeSelect = document.getElementById("pref-theme");
   const densitySelect = document.getElementById("pref-density");
+  const fontSelect = document.getElementById("pref-font");
   const hero = document.querySelector(".hero");
   const allBackgrounds = { ...HERO_BACKGROUNDS, ...(preferences.customBackgrounds || {}) };
 
@@ -1815,6 +2365,7 @@ function applyPreferences() {
   }
   if (themeSelect) themeSelect.value = preferences.theme;
   if (densitySelect) densitySelect.value = preferences.density;
+  if (fontSelect) fontSelect.value = preferences.font || "japanese";
 
   renderBackgroundPicker();
 }
@@ -1858,6 +2409,8 @@ function clearTrackerStorage() {
   localStorage.removeItem(KEY);
   localStorage.removeItem(PREFS_KEY);
 
+  localStorage.removeItem(LEGACY_TRACKER_KEY);
+  localStorage.removeItem(LEGACY_PREFS_KEY);
   localStorage.removeItem("uos_aero_jp_v2");
   localStorage.removeItem("uos_aero_jp_v1");
   localStorage.removeItem("uos_blackboard_links_v1");
@@ -1897,10 +2450,69 @@ function getFormulaLinks(mi) {
   return Array.isArray(store.formulas[mi]) ? store.formulas[mi] : [];
 }
 
+function getRelevantLinks(mi) {
+  const store = getStore();
+  if (!store.relevantLinks) store.relevantLinks = {};
+  return Array.isArray(store.relevantLinks[mi]) ? store.relevantLinks[mi] : [];
+}
+
+
+function getCourseworkComponents(mi) {
+  const store = getStore();
+  if (!store.courseworkComponents) store.courseworkComponents = {};
+  if (!Array.isArray(store.courseworkComponents[mi])) store.courseworkComponents[mi] = [];
+  return store.courseworkComponents[mi];
+}
+
+function calculateCourseworkFromComponents(mi) {
+  const components = getCourseworkComponents(mi);
+  const valid = components
+    .map((component, index) => ({
+      index,
+      name: component.name || `Component ${index + 1}`,
+      mark: parseMark(component.mark),
+      weight: parseMark(component.weight)
+    }))
+    .filter((component) => component.mark !== null);
+
+  if (!valid.length) {
+    return { mark: null, weightTotal: 0, count: components.length };
+  }
+
+  const explicit = valid.filter((component) => component.weight !== null);
+  const unweighted = valid.filter((component) => component.weight === null);
+  const explicitTotal = explicit.reduce((sum, component) => sum + component.weight, 0);
+  const remaining = Math.max(0, 100 - explicitTotal);
+  const autoWeight = unweighted.length ? remaining / unweighted.length : 0;
+
+  let weightedSum = 0;
+  let assignedTotal = 0;
+
+  valid.forEach((component) => {
+    const weight = component.weight !== null ? component.weight : autoWeight;
+    weightedSum += component.mark * weight;
+    assignedTotal += weight;
+  });
+
+  if (assignedTotal <= 0) return { mark: null, weightTotal: 0, count: components.length };
+
+  return {
+    mark: weightedSum / assignedTotal,
+    weightTotal: assignedTotal,
+    count: components.length
+  };
+}
+
+function getEffectiveCourseworkMark(mi) {
+  const calculated = calculateCourseworkFromComponents(mi);
+  if (calculated.mark !== null) return calculated.mark;
+  return parseMark(getStore().coursework[mi]);
+}
+
 function getModuleFinal(mi) {
   const mod = MODULES[mi];
   const store = getStore();
-  const cw = parseMark(store.coursework[mi]);
+  const cw = getEffectiveCourseworkMark(mi);
   const ex = parseMark(store.exams[mi]);
   if (mod.cw === 0) return ex;
   if (cw === null || ex === null) return null;
@@ -2028,6 +2640,49 @@ function renderFormulaLinks(mi) {
   `).join("");
 }
 
+function addRelevantLink(mi, event) {
+  if (event) event.stopPropagation();
+  const name = prompt("Link name:", "Useful resource");
+  if (name === null || !name.trim()) return;
+  const url = prompt("Link URL:");
+  if (url === null || !url.trim()) return;
+  const store = getStore();
+  if (!store.relevantLinks) store.relevantLinks = {};
+  const items = getRelevantLinks(mi).slice();
+  items.push({ name: name.trim(), url: safeUrl(url) });
+  store.relevantLinks[mi] = items;
+  save();
+  renderRelevantLinks(mi);
+}
+
+function deleteRelevantLink(mi, index, event) {
+  if (event) event.stopPropagation();
+  const items = getRelevantLinks(mi).slice();
+  if (!items[index]) return;
+  items.splice(index, 1);
+  const store = getStore();
+  if (!store.relevantLinks) store.relevantLinks = {};
+  if (items.length) store.relevantLinks[mi] = items; else delete store.relevantLinks[mi];
+  save();
+  renderRelevantLinks(mi);
+}
+
+function renderRelevantLinks(mi) {
+  const host = document.getElementById(`relevant-links-${mi}`);
+  if (!host) return;
+  const items = getRelevantLinks(mi);
+  if (!items.length) {
+    host.innerHTML = '<div class="relevant-links-empty">No relevant links added yet.</div>';
+    return;
+  }
+  host.innerHTML = items.map((item, index) => `
+    <div class="relevant-link-chip">
+      <a href="${escapeHtml(item.url)}" target="_blank" rel="noopener">${escapeHtml(item.name)}</a>
+      <button class="relevant-link-remove-btn" type="button" onclick="deleteRelevantLink(${mi}, ${index}, event)" title="Delete relevant link">x</button>
+    </div>
+  `).join("");
+}
+
 function updateFormulaButton(mi) {
   const btn = document.getElementById(`formula-btn-${mi}`);
   if (btn) {
@@ -2061,9 +2716,20 @@ function updateModule(mi) {
 
   const cwInput = document.getElementById(`cw-${mi}`);
   if (cwInput) {
+    const calculated = calculateCourseworkFromComponents(mi);
     cwInput.disabled = MODULES[mi].cw === 0;
     if (MODULES[mi].cw === 0) cwInput.placeholder = "N/A";
+    else {
+      if (calculated.mark !== null) {
+        getStore().coursework[mi] = calculated.mark.toFixed(1);
+        cwInput.value = calculated.mark.toFixed(1);
+        cwInput.placeholder = `Calc ${calculated.mark.toFixed(1)}%`;
+      } else {
+        cwInput.placeholder = "-";
+      }
+    }
   }
+  updateCourseworkSummary(mi);
 }
 
 function updateGlobal() {
@@ -2147,6 +2813,10 @@ document.getElementById("dashboard-modal").addEventListener("click", (event) => 
   if (event.target.id === "dashboard-modal") closeDashboard();
 });
 
+document.getElementById("timeline-modal").addEventListener("click", (event) => {
+  if (event.target.id === "timeline-modal") closeDeadlineTimeline();
+});
+
 function renderDashboardChart() {
   const canvas = document.getElementById("dashboard-chart");
   if (!canvas) return;
@@ -2174,6 +2844,16 @@ function renderDashboardChart() {
   const barWidth = Math.max(28, Math.min(42, Math.floor(step * 0.42)));
   const crisp = (value) => Math.round(value) + 0.5;
   const darkOffwhite = document.body.classList.contains("theme-dark-offwhite");
+  const chartMonoFont = preferences.font === "sans"
+    ? "'Segoe UI', Arial, sans-serif"
+    : preferences.font === "mono"
+      ? "'DM Mono', Consolas, monospace"
+      : "'DM Mono', monospace";
+  const chartDisplayFont = preferences.font === "sans"
+    ? "'Segoe UI', Arial, sans-serif"
+    : preferences.font === "mono"
+      ? "'DM Mono', Consolas, monospace"
+      : "'Shippori Mincho', serif";
 
   const colors = darkOffwhite
     ? ["#1a2c4a", "#1a2c4a", "#1a2c4a", "#1a2c4a", "#1a2c4a", "#1a2c4a", "#1a2c4a"]
@@ -2183,7 +2863,7 @@ function renderDashboardChart() {
 
   ctx.strokeStyle = dark ? "rgba(255,255,255,0.12)" : "rgba(26,22,18,0.09)";
   ctx.lineWidth = 1;
-  ctx.font = "11px 'DM Mono', monospace";
+  ctx.font = `11px ${chartMonoFont}`;
   ctx.fillStyle = dark ? "rgba(245,240,232,0.7)" : "rgba(26,22,18,0.54)";
   ctx.textAlign = "right";
   ctx.textBaseline = "middle";
@@ -2208,12 +2888,12 @@ function renderDashboardChart() {
     ctx.fillStyle = dark ? "rgba(255,255,255,0.9)" : "rgba(26,22,18,0.84)";
     ctx.textAlign = "center";
     ctx.textBaseline = "alphabetic";
-    ctx.font = "bold 13px 'Shippori Mincho', serif";
+    ctx.font = `bold 13px ${chartDisplayFont}`;
     ctx.fillText(pct.toFixed(0) + "%", x + barWidth / 2, y - 8);
 
     ctx.fillStyle = dark ? "rgba(245,240,232,0.78)" : "rgba(26,22,18,0.72)";
     ctx.textBaseline = "top";
-    ctx.font = "11px 'DM Mono', monospace";
+    ctx.font = `11px ${chartMonoFont}`;
     ctx.fillText(mod.kanji, x + barWidth / 2, height - 30);
   });
 }
@@ -2243,22 +2923,26 @@ function renderYearSelector() {
   ];
   select.innerHTML = yearOptions.join("") + actionOptions.join("");
   select.value = state.ui.currentYearId;
-  const eyebrow = document.getElementById("hero-eyebrow");
+
+  const profile = Object.assign({}, defaultProfile, state.profile || {});
   const yearNumber = parseInt(currentYear.label.match(/\d+/)?.[0] || "1", 10);
-  const startYear = 2025 + (yearNumber - 1);
+  const profileStartYear = parseInt(profile.startYear, 10);
+  const startYear = (Number.isFinite(profileStartYear) ? profileStartYear : new Date().getFullYear()) + (yearNumber - 1);
   const endYear = startYear + 1;
+  const university = profile.university || "University";
+  const course = profile.course || "Course";
 
-  if (eyebrow) {
-  eyebrow.textContent = `University of Sheffield · ${currentYear.label} · ${startYear}-${String(endYear).slice(2)}`;
-}
+  const eyebrow = document.getElementById("hero-eyebrow");
+  if (eyebrow) eyebrow.textContent = `${university} · ${currentYear.label} · ${startYear}-${String(endYear).slice(2)}`;
+
   const title = document.getElementById("hero-title");
-  if (title) {
-    title.textContent = `Y${yearNumber} Aerospace Engineering`;
-}
-  const footer = document.getElementById("footer-label");
-  if (footer) footer.textContent = `UoS ${currentYear.label} · Progress Tracker`;
-}
+  if (title) title.textContent = `Y${yearNumber} ${course}`;
 
+  const footer = document.getElementById("footer-label");
+  if (footer) footer.textContent = `${university} ${currentYear.label} · Progress Tracker`;
+
+  document.title = `${course} ${currentYear.label} Tracker`;
+}
 function handleYearDropdown(value) {
   if (value === "__new__") return createNewYear();
   if (value === "__archive__") return archiveCurrentYear();
@@ -2351,6 +3035,148 @@ function addModuleToCurrentYear() {
   updateGlobal();
 }
 
+function shiftIndexedObjectAfterDelete(object, deletedIndex) {
+  if (!object) return {};
+  const shifted = {};
+  Object.entries(object).forEach(([key, value]) => {
+    const index = parseInt(key, 10);
+    if (!Number.isFinite(index) || index === deletedIndex) return;
+    shifted[index > deletedIndex ? index - 1 : index] = value;
+  });
+  return shifted;
+}
+
+function shiftTopicsAfterModuleDelete(topics, deletedIndex) {
+  const shifted = {};
+  Object.entries(topics || {}).forEach(([key, value]) => {
+    const match = key.match(/^t_(\d+)_(\d+)$/);
+    if (!match) return;
+    const moduleIndex = parseInt(match[1], 10);
+    const topicIndex = match[2];
+    if (moduleIndex === deletedIndex) return;
+    const nextModuleIndex = moduleIndex > deletedIndex ? moduleIndex - 1 : moduleIndex;
+    shifted[`t_${nextModuleIndex}_${topicIndex}`] = value;
+  });
+  return shifted;
+}
+
+function deleteModuleFromCurrentYear(mi, event) {
+  if (event) event.stopPropagation();
+  const mod = MODULES[mi];
+  if (!mod) return;
+  const confirmation = confirm(`Delete ${mod.kanji || mod.short || mod.name}?`);
+  if (!confirmation) return;
+
+  const store = getStore();
+  MODULES.splice(mi, 1);
+  store.topics = shiftTopicsAfterModuleDelete(store.topics, mi);
+  store.coursework = shiftIndexedObjectAfterDelete(store.coursework, mi);
+  store.courseworkComponents = shiftIndexedObjectAfterDelete(store.courseworkComponents, mi);
+  store.exams = shiftIndexedObjectAfterDelete(store.exams, mi);
+  store.notes = shiftIndexedObjectAfterDelete(store.notes, mi);
+  store.blackboard = shiftIndexedObjectAfterDelete(store.blackboard, mi);
+  store.formulas = shiftIndexedObjectAfterDelete(store.formulas, mi);
+  store.relevantLinks = shiftIndexedObjectAfterDelete(store.relevantLinks, mi);
+
+  save();
+  refreshActiveYear();
+  buildModules();
+  renderStickyExams();
+  updateGlobal();
+}
+
+function editModuleTitle(mi, event) {
+  if (event) event.stopPropagation();
+  const mod = MODULES[mi];
+  if (!mod) return;
+  const title = prompt("Module title:", mod.name || "");
+  if (title === null || !title.trim()) return;
+  mod.name = title.trim();
+  if (!mod.short || mod.short === mod.kanji) mod.short = title.trim();
+  save();
+  buildModules();
+  updateGlobal();
+}
+
+function editModuleCode(mi, event) {
+  if (event) event.stopPropagation();
+  const mod = MODULES[mi];
+  if (!mod) return;
+  const previousCode = mod.kanji || "";
+  const code = prompt("Module code:", previousCode);
+  if (code === null || !code.trim()) return;
+  mod.kanji = code.trim().toUpperCase();
+  if (!mod.short || mod.short === previousCode) mod.short = mod.kanji;
+  save();
+  buildModules();
+  updateGlobal();
+}
+
+
+function addCourseworkComponent(mi, event) {
+  if (event) event.stopPropagation();
+
+  const input = prompt(
+    'Add coursework component(s).\n\nSingle component: Lab Report\nMultiple components: "Lab Report" "Quiz" "Project"'
+  );
+
+  if (!input || !input.trim()) return;
+
+  const quotedComponents = [...input.matchAll(/"([^"]+)"/g)]
+    .map(match => match[1].trim())
+    .filter(Boolean);
+
+  const namesToAdd = quotedComponents.length
+    ? quotedComponents
+    : [input.trim()];
+
+  const components = getCourseworkComponents(mi);
+  namesToAdd.forEach((name) => components.push({ name, mark: "", weight: "" }));
+
+  save();
+  buildModules();
+  updateGlobal();
+}
+
+function deleteCourseworkComponent(mi, ci, event) {
+  if (event) event.stopPropagation();
+  const components = getCourseworkComponents(mi);
+  if (!components[ci]) return;
+  components.splice(ci, 1);
+  save();
+  buildModules();
+  updateGlobal();
+}
+
+function updateCourseworkComponent(mi, ci, field, value) {
+  const components = getCourseworkComponents(mi);
+  if (!components[ci]) return;
+  components[ci][field] = value;
+  save();
+  updateModule(mi);
+  updateGlobal();
+  updateCourseworkSummary(mi);
+}
+
+function updateCourseworkSummary(mi) {
+  const summary = document.getElementById(`cw-calc-summary-${mi}`);
+  if (!summary) return;
+  const calculated = calculateCourseworkFromComponents(mi);
+  const manual = parseMark(getStore().coursework[mi]);
+
+  if (calculated.mark !== null) {
+    summary.textContent = `Calculated coursework: ${calculated.mark.toFixed(1)}% - Components override manual coursework input`;
+    return;
+  }
+
+  if (manual !== null) {
+    summary.textContent = `Manual coursework override: ${manual.toFixed(1)}%`;
+    return;
+  }
+
+  summary.textContent = `No coursework mark yet. Add components, or use the Coursework % input above.`;
+}
+
 function addTopicToModule(mi, event) {
   if (event) event.stopPropagation();
 
@@ -2406,6 +3232,18 @@ function deleteTopicFromModule(mi, ti, event) {
   updateGlobal();
 }
 
+function editTopicInModule(mi, ti, event) {
+  if (event) event.stopPropagation();
+  const topic = MODULES[mi]?.topics[ti];
+  if (!topic) return;
+  const updated = prompt("Topic name:", topic);
+  if (updated === null || !updated.trim()) return;
+  MODULES[mi].topics[ti] = updated.trim();
+  save();
+  buildModules();
+  updateGlobal();
+}
+
 function renderStickyExams() {
   const host = document.getElementById("live-exam-bar");
   if (!host) return;
@@ -2435,6 +3273,7 @@ function renderStickyExams() {
       removeExam(index);
     });
     card.addEventListener("dblclick", () => removeExam(index));
+    card.addEventListener("click", () => openDeadlineTimeline());
     host.appendChild(card);
   });
   const button = document.createElement("button");
@@ -2452,9 +3291,10 @@ function addExam() {
     if (date) alert("Invalid date format.");
     return;
   }
-  getStore().customExams.push({ mod: mod.trim(), date });
+  getStore().customExams.push({ mod: mod.trim(), date, note: "" });
   save();
   renderStickyExams();
+  renderDeadlineTimeline();
 }
 
 function removeExam(index) {
@@ -2464,6 +3304,117 @@ function removeExam(index) {
   store.customExams.splice(index, 1);
   save();
   renderStickyExams();
+  renderDeadlineTimeline();
+}
+
+function setupDeadlineBarScrolling() {
+  const bar = document.getElementById("live-exam-bar");
+  if (!bar || bar.dataset.scrollReady) return;
+  bar.dataset.scrollReady = "true";
+
+  let isDown = false;
+  let startX = 0;
+  let startScrollLeft = 0;
+  let moved = false;
+
+  bar.addEventListener("wheel", (event) => {
+    if (Math.abs(event.deltaY) <= Math.abs(event.deltaX)) return;
+    event.preventDefault();
+    bar.scrollLeft += event.deltaY;
+  }, { passive: false });
+
+  bar.addEventListener("pointerdown", (event) => {
+    if (event.button !== 0) return;
+    if (event.target.closest("button")) return;
+    isDown = true;
+    moved = false;
+    startX = event.clientX;
+    startScrollLeft = bar.scrollLeft;
+    bar.classList.add("dragging");
+    bar.setPointerCapture(event.pointerId);
+  });
+
+  bar.addEventListener("pointermove", (event) => {
+    if (!isDown) return;
+    const dx = event.clientX - startX;
+    if (Math.abs(dx) > 4) moved = true;
+    bar.scrollLeft = startScrollLeft - dx;
+  });
+
+  function endDrag(event) {
+    if (!isDown) return;
+    isDown = false;
+    bar.classList.remove("dragging");
+    if (bar.hasPointerCapture(event.pointerId)) bar.releasePointerCapture(event.pointerId);
+  }
+
+  bar.addEventListener("pointerup", endDrag);
+  bar.addEventListener("pointercancel", endDrag);
+  bar.addEventListener("click", (event) => {
+    if (!moved) return;
+    event.preventDefault();
+    event.stopPropagation();
+    moved = false;
+  }, true);
+}
+
+function renderDeadlineTimeline() {
+  const host = document.getElementById("timeline-list");
+  if (!host) return;
+  const store = getStore();
+  const now = Date.now();
+  const exams = (store.customExams || [])
+    .slice()
+    .sort((a, b) => new Date(a.date) - new Date(b.date));
+
+  if (!exams.length) {
+    host.innerHTML = '<div class="timeline-empty">No deadlines yet. Add one from the top bar or from this timeline.</div>';
+    return;
+  }
+
+  host.innerHTML = exams.map((exam, index) => {
+    const target = new Date(exam.date);
+    const days = Math.floor((target.getTime() - now) / 86400000);
+    return `
+      <div class="timeline-item">
+        <div class="timeline-rail"><div class="timeline-dot"></div></div>
+        <div class="timeline-card">
+          <div class="timeline-title">${escapeHtml(exam.mod)}</div>
+          <div class="timeline-meta">
+            <span class="timeline-badge countdown ${days <= 3 ? "urgent" : ""}">${escapeHtml(formatCountdown(exam.date))}</span>
+            <span class="timeline-badge">${escapeHtml(target.toLocaleString([], { dateStyle: "full", timeStyle: "short" }))}</span>
+          </div>
+          <div class="timeline-notes-label">Notes</div>
+          <textarea class="timeline-notes" placeholder="Add context, room, prep checklist, what to bring..." oninput="updateDeadlineNote(${index}, this.value)">${escapeHtml(exam.note || "")}</textarea>
+          <div class="timeline-actions">
+            <button class="mini-btn module-delete-btn" type="button" onclick="removeExam(${index})" title="Delete deadline" aria-label="Delete deadline">x</button>
+          </div>
+        </div>
+      </div>
+    `;
+  }).join("");
+}
+
+function updateDeadlineNote(index, value) {
+  const store = getStore();
+  if (!store.customExams[index]) return;
+  store.customExams[index].note = value;
+  save();
+}
+
+function openDeadlineTimeline() {
+  document.getElementById("timeline-modal").classList.remove("hidden");
+  renderDeadlineTimeline();
+  if (deadlineTimelineInterval) clearInterval(deadlineTimelineInterval);
+  deadlineTimelineInterval = setInterval(renderDeadlineTimeline, 1000);
+}
+
+function closeDeadlineTimeline() {
+  document.getElementById("timeline-modal").classList.add("hidden");
+  if (deadlineTimelineInterval) {
+    clearInterval(deadlineTimelineInterval);
+    deadlineTimelineInterval = null;
+  }
 }
 
 function buildModules() {
@@ -2484,8 +3435,6 @@ function buildModules() {
         <div class="module-links">
           <button class="bb-link" id="bb-link-${mi}" type="button" onclick="openBlackboardLink(${mi}, event)">Set Blackboard</button>
           <button class="formula-btn" id="formula-btn-${mi}" type="button" onclick="openFormulaLink(${mi}, event)">Docs</button>
-          <button class="bb-edit-btn" type="button" onclick="setBlackboardLink(${mi}, event)">Edit Link</button>
-          <button class="formula-edit-btn" type="button" onclick="setFormulaLink(${mi}, event)">Add Formula</button>
         </div>
       </div>
       <div class="progress-section">
@@ -2510,12 +3459,23 @@ function buildModules() {
         <div class="final-mark" id="mfinal-${mi}">-</div>
         <div id="mcls-${mi}" class="final-cls"></div>
       </div>
-      <div class="module-actions"></div>
+      <div class="module-actions">
+        <button class="mini-btn module-delete-btn" type="button" onclick="deleteModuleFromCurrentYear(${mi}, event)" title="Delete module" aria-label="Delete module">x</button>
+      </div>
       <div class="chevron" id="chev-${mi}">&#9654;</div>
     `;
 
     const list = document.createElement("div");
     list.className = "topic-list";
+
+    const moduleEditTools = document.createElement("div");
+    moduleEditTools.className = "module-edit-tools";
+    moduleEditTools.innerHTML = `
+      <button class="bb-edit-btn" type="button" onclick="editModuleTitle(${mi}, event)">Edit Title</button>
+      <button class="bb-edit-btn" type="button" onclick="editModuleCode(${mi}, event)">Edit Code</button>
+      <button class="bb-edit-btn" type="button" onclick="setBlackboardLink(${mi}, event)">Edit Blackboard Link</button>
+    `;
+    list.appendChild(moduleEditTools);
 
     const notesWrap = document.createElement("div");
     notesWrap.className = "notes-area-wrap";
@@ -2531,6 +3491,61 @@ function buildModules() {
     notes.addEventListener("click", (event) => event.stopPropagation());
     notesWrap.appendChild(notes);
     list.appendChild(notesWrap);
+
+    const relevantLinksWrap = document.createElement("div");
+    relevantLinksWrap.className = "relevant-links-wrap";
+    relevantLinksWrap.innerHTML = `
+      <div class="relevant-links-head">
+        <div class="relevant-links-title">Relevant Links</div>
+        <button class="mini-btn" type="button" onclick="addRelevantLink(${mi}, event)">Add Link</button>
+      </div>
+      <div class="relevant-links-list" id="relevant-links-${mi}"></div>
+    `;
+    list.appendChild(relevantLinksWrap);
+
+    if (mod.cw > 0) {
+      const courseworkWrap = document.createElement("div");
+      courseworkWrap.className = "coursework-calc-wrap";
+      const components = getCourseworkComponents(mi);
+      courseworkWrap.innerHTML = `
+        <div class="coursework-calc-head">
+          <div class="coursework-calc-title">Coursework Calculator</div>
+          <button class="mini-btn" type="button" onclick="addCourseworkComponent(${mi}, event)">Add Component</button>
+        </div>
+        <div class="coursework-calc-summary" id="cw-calc-summary-${mi}"></div>
+        <div id="cw-components-${mi}"></div>
+      `;
+      const componentsHost = courseworkWrap.querySelector(`#cw-components-${mi}`);
+      if (!components.length) {
+        componentsHost.innerHTML = `<div class="coursework-empty">Add coursework components if you do not know your overall coursework mark yet. Blank weights are automatically split across unweighted components.</div>`;
+      } else {
+        components.forEach((component, ci) => {
+          const componentRow = document.createElement("div");
+          componentRow.className = "coursework-component-row";
+          componentRow.innerHTML = `
+            <div class="field">
+              <label>Component</label>
+              <input class="input cw-comp-name" value="${escapeHtml(component.name || "")}" placeholder="Coursework name">
+            </div>
+            <div class="field">
+              <label>Mark %</label>
+              <input class="input cw-comp-mark" type="number" min="0" max="100" step="0.1" value="${component.mark ?? ""}" placeholder="-">
+            </div>
+            <div class="field">
+              <label>Weight %</label>
+              <input class="input cw-comp-weight" type="number" min="0" max="100" step="0.1" value="${component.weight ?? ""}" placeholder="Auto">
+            </div>
+            <button class="mini-btn coursework-component-delete" type="button">Delete</button>
+          `;
+          componentRow.querySelector(".cw-comp-name").addEventListener("input", (event) => updateCourseworkComponent(mi, ci, "name", event.target.value));
+          componentRow.querySelector(".cw-comp-mark").addEventListener("input", (event) => updateCourseworkComponent(mi, ci, "mark", event.target.value));
+          componentRow.querySelector(".cw-comp-weight").addEventListener("input", (event) => updateCourseworkComponent(mi, ci, "weight", event.target.value));
+          componentRow.querySelector(".coursework-component-delete").addEventListener("click", (event) => deleteCourseworkComponent(mi, ci, event));
+          componentsHost.appendChild(componentRow);
+        });
+      }
+      list.appendChild(courseworkWrap);
+    }
 
     const compactMarksWrap = document.createElement("div");
     compactMarksWrap.className = "notes-area-wrap compact-marks-wrap";
@@ -2603,6 +3618,11 @@ function buildModules() {
         setTopicCheckbox(checkbox, mi, ti, dragTopicValue);
       });
       const deleteButton = document.createElement("button");
+      const editButton = document.createElement("button");
+      editButton.type = "button";
+      editButton.className = "topic-edit-btn";
+      editButton.textContent = "Edit";
+      editButton.addEventListener("click", (event) => editTopicInModule(mi, ti, event));
       deleteButton.type = "button";
       deleteButton.className = "topic-delete-btn";
       deleteButton.textContent = "Delete";
@@ -2610,6 +3630,7 @@ function buildModules() {
       main.appendChild(checkbox);
       main.appendChild(label);
       row.appendChild(main);
+      row.appendChild(editButton);
       row.appendChild(deleteButton);
       list.appendChild(row);
     });
@@ -2672,6 +3693,8 @@ function buildModules() {
     updateModule(mi);
     updateBlackboardButton(mi);
     updateFormulaButton(mi);
+    renderRelevantLinks(mi);
+    updateCourseworkSummary(mi);
   });
 }
 
@@ -2692,10 +3715,17 @@ applyPreferences();
 renderYearSelector();
 buildModules();
 renderStickyExams();
+setupDeadlineBarScrolling();
 updateGlobal();
+showTemplateSplash();
 
-setTimeout(showDeadlineSplash, 500);
+setTimeout(() => {
+  if (document.getElementById("template-splash").classList.contains("hidden")) {
+    showDeadlineSplash();
+  }
+}, 500);
 setInterval(renderStickyExams, 1000);
 </script>
 </body>
 </html>
+
